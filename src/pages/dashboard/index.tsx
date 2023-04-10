@@ -1,9 +1,9 @@
 import { GetServerSideProps, NextPage } from "next"
 import api from "@/services/api"
-import { Center, Grid, GridItem } from "@chakra-ui/react"
+import { Grid, GridItem } from "@chakra-ui/react"
 import { iContact } from "@/types/contact.interface"
-import iUser from "@/types/user.interface"
-import ContactCard from "@/components/contactCard"
+import { iUser } from "@/types/user.interface"
+import ContactCard from "@/components/dashboard/contactCard"
 
 interface Props {
 	contacts: iContact[]

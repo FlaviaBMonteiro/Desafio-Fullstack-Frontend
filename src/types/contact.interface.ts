@@ -1,4 +1,4 @@
-import iUser from "./user.interface"
+import { iUser } from "./user.interface"
 
 export interface iContact {
 	id: number

@@ -1,6 +1,6 @@
 import { iContact } from "./contact.interface"
 
-interface iUser {
+export interface iUser {
 	id: number
 	email: string
 	password: string
@@ -11,4 +11,8 @@ interface iUser {
 	createdAt: string
 	updatedAt: string
 }
-export default iUser
+
+export interface iUserLogin {
+	email: string
+	password: string
+}
