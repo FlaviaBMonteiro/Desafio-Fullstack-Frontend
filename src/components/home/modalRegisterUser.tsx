@@ -22,9 +22,11 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { useState } from "react"
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons"
 import { iUserLogin } from "@/types/user.interface"
+import { useAuth } from "@/context/authContext"
 
 const ModalRegisterUser = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure()
+	const { login } = useAuth()
 	const formschame = yup.object().shape({
 		email: yup.string().email("deve ser um e-mail válido").required("e-mail obrigatório"),
 		password: yup.string().required("Senha obrigatória"),
@@ -45,13 +47,13 @@ const ModalRegisterUser = () => {
 	})
 
 	const onFormSubmit = (formData: iUserLogin) => {
-		console.log(formData)
+		login(formData)
 	}
 
 	return (
 		<>
 			<Button variant="default" onClick={onOpen}>
-				Login
+				Cadastre-se
 			</Button>
 
 			<Modal isOpen={isOpen} onClose={onClose}>
@@ -110,7 +112,7 @@ const ModalRegisterUser = () => {
 								bg: "blue.700",
 							}}
 						>
-							Cadastre-se
+							Entrar
 						</Button>
 						<Button mt="auto" size="lg" onClick={onClose}>
 							Cancel

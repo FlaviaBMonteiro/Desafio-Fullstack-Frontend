@@ -7,7 +7,7 @@ import Image from "next/image"
 const Main = () => {
 	return (
 		<Grid>
-			<Flex boxShadow="md" p="6" bg="blue.600">
+			<Flex boxShadow="md" pr="6" pl="6" pt="2" pb="2" bg="blue.600" alignItems="center">
 				<Box ml="10">
 					<Image src={logo} alt="logo" />
 				</Box>

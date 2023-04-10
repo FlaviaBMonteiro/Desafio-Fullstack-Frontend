@@ -1,3 +1,4 @@
+import { ReactNode } from "react"
 import { iContact } from "./contact.interface"
 
 export interface iUser {
@@ -15,4 +16,12 @@ export interface iUser {
 export interface iUserLogin {
 	email: string
 	password: string
+}
+
+export interface iProviderProps {
+	children: ReactNode
+}
+
+export interface iUserName {
+	name: string
 }

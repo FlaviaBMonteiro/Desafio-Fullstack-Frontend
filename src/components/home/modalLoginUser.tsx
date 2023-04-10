@@ -22,9 +22,11 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { useState } from "react"
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons"
 import { iUserLogin } from "@/types/user.interface"
+import { useAuth } from "@/context/authContext"
 
 const ModalLoginUser = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure()
+	const { login } = useAuth()
 	const formschame = yup.object().shape({
 		email: yup.string().email("deve ser um e-mail válido").required("e-mail obrigatório"),
 		password: yup.string().required("Senha obrigatória"),
@@ -45,7 +47,7 @@ const ModalLoginUser = () => {
 	})
 
 	const onFormSubmit = (formData: iUserLogin) => {
-		console.log(formData)
+		login(formData)
 	}
 
 	return (
@@ -57,7 +59,7 @@ const ModalLoginUser = () => {
 			<Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
 				<ModalContent>
-					<ModalHeader textAlign="center">L O G I N</ModalHeader>
+					<ModalHeader>L o g i n</ModalHeader>
 					<ModalBody pb={6}>
 						<FormControl id="email" isRequired isInvalid={emailError}>
 							<FormLabel>E-mail</FormLabel>

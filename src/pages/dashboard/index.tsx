@@ -33,7 +33,7 @@ const Dashboard: NextPage<Props> = ({ contacts }) => {
 export default Dashboard
 
 export const getServerSideProps: GetServerSideProps = async () => {
-	const response = await api.get("contacts/users/1")
+	const response = await api.get("/contacts/users/1")
 	const user: iUser = response.data
 	const contacts: iContact[] = user.contacts
 	console.log(contacts)
