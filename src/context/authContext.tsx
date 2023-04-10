@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }: iProviderProps) => {
 			.then((response) => {
 				console.log(response)
 				setCookie(null, "kenzie.token", response.data.token, { maxAge: 60 * 30, path: "/" })
-
+				setCookie(null, "kenzie.user", response.data.id, { maxAge: 60 * 30, path: "/" })
 				toast({
 					title: "sucess",
 					variant: "solid",
@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }: iProviderProps) => {
 						</Box>
 					),
 				})
+				router.push("")
 			})
 			.catch((err) => {
 				toast({
