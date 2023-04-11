@@ -4,12 +4,29 @@ import HomePage from "@/components/home/homepage"
 import HeaderMenu from "@/components/home/headerMenu"
 import nookies from "nookies"
 import { iUserEmail } from "@/types/user.interface"
+import { useState } from "react"
+import Dashboard from "@/components/home/dashboard"
+import UserProvider from "@/context/userContext"
 
-const Main = ({ email }: iUserEmail) => {
+interface IHeaderProps {
+	email?: string
+	token?: string
+}
+
+const Main = ({ email, token }: IHeaderProps) => {
 	return (
 		<Grid>
 			<HeaderMenu email={email} isLogged />
-			<HomePage />
+			{email ? (
+				<>
+					<UserProvider email={email} token={token} />
+					<Dashboard email={email} token={token} />
+				</>
+			) : (
+				<>
+					<HomePage />
+				</>
+			)}
 		</Grid>
 	)
 }
@@ -27,6 +44,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 		}
 	}
 	return {
-		props: { email: cookies["kenzieEmail"] },
+		props: { email: cookies["kenzieEmail"], token: cookies["kenzieToken"] },
 	}
 }

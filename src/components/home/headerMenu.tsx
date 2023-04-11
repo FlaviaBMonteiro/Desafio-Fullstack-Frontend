@@ -41,7 +41,7 @@ const HeaderMenu = ({ email, isLogged = false }: IHeaderProps) => {
 	if (!email) {
 		isLogged = false
 	}
-	console.log(`Está logado?: ${isLogged}`)
+
 	return (
 		<>
 			<Flex boxShadow="md" pr="6" pl="6" pt="2" pb="2" bg="blue.600" alignItems="center">

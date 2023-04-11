@@ -8,12 +8,14 @@ import { createContext, useContext, useState } from "react"
 interface AuthProviderData {
 	login: (userData: iUserLogin) => void
 	uMail: string
+	token: string
 }
 
-const AuthContext = createContext<AuthProviderData>({} as AuthProviderData)
+export const AuthContext = createContext<AuthProviderData>({} as AuthProviderData)
 
 export const AuthProvider = ({ children }: iProviderProps) => {
 	const [uMail, setuMail] = useState("")
+	const [token, setToken] = useState("")
 	const toast = useToast()
 	const router = useRouter()
 	const login = (userData: iUserLogin) => {
@@ -22,7 +24,7 @@ export const AuthProvider = ({ children }: iProviderProps) => {
 			.then((response) => {
 				setCookie(null, "kenzieToken", response.data.token)
 				setCookie(null, "kenzieEmail", response.data.email)
-				console.log(`Auth Response?: ${response.data.email}`)
+				setToken(response.data.token)
 				setuMail(response.data.email)
 				toast({
 					title: "sucess",
@@ -51,7 +53,7 @@ export const AuthProvider = ({ children }: iProviderProps) => {
 				})
 			})
 	}
-	return <AuthContext.Provider value={{ login, uMail }}>{children}</AuthContext.Provider>
+	return <AuthContext.Provider value={{ login, uMail, token }}>{children}</AuthContext.Provider>
 }
 
 export const useAuth = () => useContext(AuthContext)
