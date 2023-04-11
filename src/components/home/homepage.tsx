@@ -1,9 +1,9 @@
 import { Box, Center, Button, Heading } from "@chakra-ui/react"
 import image from "../../../public/image.png"
 import Image from "next/image"
-import ModalRegisterUser from "./modalRegisterUser"
+import ModalRegisterUser from "../modal/modalRegisterUser"
 
-const Landscape = () => {
+const HomePage = () => {
 	return (
 		<>
 			<Center
@@ -25,4 +25,4 @@ const Landscape = () => {
 	)
 }
 
-export default Landscape
+export default HomePage

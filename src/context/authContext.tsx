@@ -7,22 +7,23 @@ import { createContext, useContext, useState } from "react"
 
 interface AuthProviderData {
 	login: (userData: iUserLogin) => void
+	uMail: string
 }
 
 const AuthContext = createContext<AuthProviderData>({} as AuthProviderData)
 
 export const AuthProvider = ({ children }: iProviderProps) => {
-	const [avatar, setAvatar] = useState("")
-	const [id, setID] = useState<iUser | null>(null)
+	const [uMail, setuMail] = useState("")
 	const toast = useToast()
 	const router = useRouter()
 	const login = (userData: iUserLogin) => {
 		api
 			.post("login", userData)
 			.then((response) => {
-				console.log(response)
-				setCookie(null, "kenzie.token", response.data.token, { maxAge: 60 * 30, path: "/" })
-				setCookie(null, "kenzie.user", response.data.id, { maxAge: 60 * 30, path: "/" })
+				setCookie(null, "kenzieToken", response.data.token)
+				setCookie(null, "kenzieEmail", response.data.email)
+				console.log(`Auth Response?: ${response.data.email}`)
+				setuMail(response.data.email)
 				toast({
 					title: "sucess",
 					variant: "solid",
@@ -34,7 +35,7 @@ export const AuthProvider = ({ children }: iProviderProps) => {
 						</Box>
 					),
 				})
-				router.push("")
+				router.push("/home")
 			})
 			.catch((err) => {
 				toast({
@@ -50,7 +51,7 @@ export const AuthProvider = ({ children }: iProviderProps) => {
 				})
 			})
 	}
-	return <AuthContext.Provider value={{ login }}>{children}</AuthContext.Provider>
+	return <AuthContext.Provider value={{ login, uMail }}>{children}</AuthContext.Provider>
 }
 
 export const useAuth = () => useContext(AuthContext)
