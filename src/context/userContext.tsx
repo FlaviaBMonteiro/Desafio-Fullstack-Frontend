@@ -1,7 +1,8 @@
-import { useState, useEffect, createContext } from "react"
+import { useState, useEffect, createContext, useContext } from "react"
 import api from "@/services/api"
 import { iUser } from "@/types/user.interface"
 import { iContact, iContactCard } from "@/types/contact.interface"
+import { ReactNode } from "react"
 
 interface userProviderData {
 	user: iUser
@@ -13,9 +14,10 @@ export const UserContext = createContext<userProviderData>({} as userProviderDat
 interface IHeaderProps {
 	email?: string
 	token?: string
+	children: ReactNode
 }
 
-const UserProvider = ({ email, token }: IHeaderProps) => {
+export const UserProvider = ({ email, token, children }: IHeaderProps) => {
 	const [user, setUser] = useState<iUser | null>(null)
 	const [contacts, setContacts] = useState<iContactCard[]>([])
 	const [isLoading, setLoading] = useState(false)
@@ -46,7 +48,7 @@ const UserProvider = ({ email, token }: IHeaderProps) => {
 	if (isLoading) return <p>Loading...</p>
 	if (!user) return <p>Usuário não encontrado</p>
 
-	return <UserContext.Provider value={{ user, contacts }}></UserContext.Provider>
+	return <UserContext.Provider value={{ user, contacts }}>{children}</UserContext.Provider>
 }
 
-export default UserProvider
+export const useUser = () => useContext(UserContext)
