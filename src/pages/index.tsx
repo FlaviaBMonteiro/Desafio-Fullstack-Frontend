@@ -1,9 +1,8 @@
 import Head from "next/head"
-import { Center, Box, Spacer, Button, Grid } from "@chakra-ui/react"
-import { iUserEmail } from "@/types/user.interface"
+import { iHeaderProps } from "@/types/user.interface"
 import Main from "./home"
 
-export default function Home({ email }: iUserEmail) {
+export default function Home({ email, token }: iHeaderProps) {
 	return (
 		<>
 			<Head>
@@ -13,9 +12,7 @@ export default function Home({ email }: iUserEmail) {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
-			<Center>
-				<Main email={email} />
-			</Center>
+			<Main email={email} token={token} />
 		</>
 	)
 }

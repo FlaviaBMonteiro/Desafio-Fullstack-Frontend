@@ -5,16 +5,13 @@ import HeaderMenu from "@/components/home/headerMenu"
 import nookies from "nookies"
 import Dashboard from "@/components/home/dashboard"
 import { UserProvider } from "@/context/userContext"
+import { iHeaderProps } from "@/types/user.interface"
 
-interface IHeaderProps {
-	email?: string
-	token?: string
-}
-
-const Main = ({ email, token }: IHeaderProps) => {
+const Main = ({ email, token }: iHeaderProps) => {
 	return (
 		<Box>
-			<HeaderMenu email={email} isLogged />
+			<HeaderMenu email={email} token={token} />
+
 			{email ? (
 				<Flex
 					mt="5"
@@ -48,7 +45,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 			},
 		}
 	}
+
 	return {
-		props: { email: cookies["kenzieEmail"], token: cookies["kenzieToken"] },
+		props: {
+			email: cookies["kenzieEmail"],
+			token: cookies["kenzieToken"],
+		},
 	}
 }

@@ -12,6 +12,19 @@ export interface iUser {
 	updatedAt: string
 }
 
+export interface iUserCard {
+	id: number
+	email: string
+	name: string
+	phone: string
+	imgURL: string
+}
+
+export interface iUserLogged {
+	email?: string
+	token?: string
+}
+
 export interface iUserLogin {
 	email: string
 	password: string
@@ -19,6 +32,14 @@ export interface iUserLogin {
 
 export interface iProviderProps {
 	children: ReactNode
+}
+
+export interface iHeaderProps {
+	email?: string
+	token?: string
+	id?: string
+	avatar?: string
+	name?: string
 }
 
 export interface iUserEmail {

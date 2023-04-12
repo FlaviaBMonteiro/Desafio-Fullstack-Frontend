@@ -1,20 +1,15 @@
 import { useUser } from "@/context/userContext"
 import ContactCard from "../dashboard/contactCard"
 import { Grid, Center, Container, Flex } from "@chakra-ui/react"
+import { iHeaderProps } from "@/types/user.interface"
 
-interface IHeaderProps {
-	email?: string
-	token?: string
-}
-
-const Dashboard = ({ email, token }: IHeaderProps) => {
-	const { user } = useUser()
+const Dashboard = ({ email, token }: iHeaderProps) => {
 	const { contacts } = useUser()
 	return (
 		<Flex justifyContent="center" gap="5">
 			{contacts.map((contact, index) => (
 				<ContactCard
-					key={contact.id}
+					key={index}
 					id={contact.id}
 					email={contact.email}
 					name={contact.name}

@@ -1,6 +1,6 @@
 import { extendTheme } from "@chakra-ui/react"
 
-const custonTheme = extendTheme({
+const globalTheme = {
 	colors: {
 		blue: {
 			300: "#A2DFF2",
@@ -119,6 +119,6 @@ const custonTheme = extendTheme({
 			},
 		},
 	},
-})
+}
 
-export default custonTheme
+export const theme = extendTheme(globalTheme)
