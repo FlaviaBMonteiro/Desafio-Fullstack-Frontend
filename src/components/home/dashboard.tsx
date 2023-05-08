@@ -1,10 +1,10 @@
-import { useUser } from "@/context/userContext"
-import ContactCard from "../dashboard/contactCard"
-import { Grid, Center, Container, Flex } from "@chakra-ui/react"
-import { iHeaderProps } from "@/types/user.interface"
+import { useUserContext } from "@/context/userContext";
+import ContactCard from "../dashboard/contactCard";
+import { Grid, Center, Container, Flex } from "@chakra-ui/react";
+import { iHeaderProps } from "@/types/user.interface";
 
-const Dashboard = ({ email, token }: iHeaderProps) => {
-	const { contacts } = useUser()
+const Dashboard = () => {
+	const { contacts } = useUserContext();
 	return (
 		<Flex justifyContent="center" gap="5">
 			{contacts.map((contact, index) => (
@@ -19,7 +19,7 @@ const Dashboard = ({ email, token }: iHeaderProps) => {
 				/>
 			))}
 		</Flex>
-	)
-}
+	);
+};
 
-export default Dashboard
+export default Dashboard;

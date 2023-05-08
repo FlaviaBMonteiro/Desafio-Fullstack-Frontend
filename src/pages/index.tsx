@@ -1,8 +1,8 @@
-import Head from "next/head"
-import { iHeaderProps } from "@/types/user.interface"
-import Main from "./home"
+import Head from "next/head";
+import { iHeaderProps } from "@/types/user.interface";
+import Main from "./home";
 
-export default function Home({ email, token }: iHeaderProps) {
+export default function Home() {
 	return (
 		<>
 			<Head>
@@ -12,7 +12,7 @@ export default function Home({ email, token }: iHeaderProps) {
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 
-			<Main email={email} token={token} />
+			<Main />
 		</>
-	)
+	);
 }

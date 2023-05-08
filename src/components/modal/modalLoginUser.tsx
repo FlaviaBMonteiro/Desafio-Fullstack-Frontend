@@ -15,28 +15,28 @@ import {
 	ModalHeader,
 	ModalOverlay,
 	useDisclosure,
-} from "@chakra-ui/react"
-import * as yup from "yup"
-import { useForm } from "react-hook-form"
-import { yupResolver } from "@hookform/resolvers/yup"
-import { useState } from "react"
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons"
-import { iUserLogin } from "@/types/user.interface"
-import { useAuth } from "@/context/authContext"
+} from "@chakra-ui/react";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useState } from "react";
+import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { iUserLogin } from "@/types/user.interface";
+import { useAuthContext } from "@/context/authContext";
 
 const ModalLoginUser = () => {
-	const { isOpen, onOpen, onClose } = useDisclosure()
-	const { login } = useAuth()
+	const { isOpen, onOpen, onClose } = useDisclosure();
+	const { login } = useAuthContext();
 	const formschame = yup.object().shape({
 		email: yup.string().email("deve ser um e-mail válido").required("e-mail obrigatório"),
 		password: yup.string().required("Senha obrigatória"),
-	})
-	const [inputEmail, setInputEmail] = useState("")
-	const [inputPassword, setInputPassword] = useState("")
-	const [showPassword, setShowPassword] = useState(false)
+	});
+	const [inputEmail, setInputEmail] = useState("");
+	const [inputPassword, setInputPassword] = useState("");
+	const [showPassword, setShowPassword] = useState(false);
 
-	const emailError = inputEmail === ""
-	const passwordError = inputPassword === ""
+	const emailError = inputEmail === "";
+	const passwordError = inputPassword === "";
 
 	const {
 		register,
@@ -44,11 +44,11 @@ const ModalLoginUser = () => {
 		formState: { errors },
 	} = useForm<iUserLogin>({
 		resolver: yupResolver(formschame),
-	})
+	});
 
 	const onFormSubmit = (formData: iUserLogin) => {
-		login(formData)
-	}
+		login(formData);
+	};
 
 	return (
 		<>
@@ -122,7 +122,7 @@ const ModalLoginUser = () => {
 				</ModalContent>
 			</Modal>
 		</>
-	)
-}
+	);
+};
 
-export default ModalLoginUser
+export default ModalLoginUser;

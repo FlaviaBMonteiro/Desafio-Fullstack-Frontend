@@ -1,31 +1,28 @@
-import api from "@/services/api"
-import { iUser, iUserLogin, iProviderProps } from "@/types//user.interface"
-import { Box, useToast } from "@chakra-ui/react"
-import { useRouter } from "next/router"
-import { setCookie } from "nookies"
-import { createContext, useContext, useState } from "react"
+import api from "@/services/api";
+import { iUserEmail, iUserLogin } from "@/types//user.interface";
+import { iAuthContext, iAuthtProps, iToken } from "@/types/auth.interface";
+import { Box, useToast } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { destroyCookie, setCookie } from "nookies";
+import { createContext, useContext, useState } from "react";
 
-interface AuthProviderData {
-	login: (userData: iUserLogin) => void
-	uMail: string
-	token: string
-}
+export const AuthContext = createContext<iAuthContext>({} as iAuthContext);
 
-export const AuthContext = createContext<AuthProviderData>({} as AuthProviderData)
-
-export const AuthProvider = ({ children }: iProviderProps) => {
-	const [uMail, setuMail] = useState("")
-	const [token, setToken] = useState("")
-	const toast = useToast()
-	const router = useRouter()
+export const AuthProvider = ({ children }: iAuthtProps) => {
+	const toast = useToast();
+	const router = useRouter();
+	const [userMail, setUserMail] = useState("");
 	const login = (userData: iUserLogin) => {
 		api
 			.post("login", userData)
 			.then((response) => {
-				setCookie(null, "kenzieToken", response.data.token)
-				setCookie(null, "kenzieEmail", response.data.email)
-				setToken(response.data.token)
-				setuMail(response.data.email)
+				const responseData = response.data as iToken;
+				setUserMail(responseData.email);
+				setCookie(null, "KenzieToken", responseData.token, {
+					maxAge: 60 * 60 * 7,
+					path: "/",
+				});
+
 				toast({
 					title: "sucess",
 					variant: "solid",
@@ -36,8 +33,8 @@ export const AuthProvider = ({ children }: iProviderProps) => {
 							Login realizado com sucesso !
 						</Box>
 					),
-				})
-				router.push("/home")
+				});
+				router.push("/home");
 			})
 			.catch((err) => {
 				toast({
@@ -50,10 +47,17 @@ export const AuthProvider = ({ children }: iProviderProps) => {
 							Erro ao logar, verifique se o e-mail e senha estão corretos
 						</Box>
 					),
-				})
-			})
-	}
-	return <AuthContext.Provider value={{ login, uMail, token }}>{children}</AuthContext.Provider>
-}
+				});
+			});
+	};
+	const logout = () => {
+		destroyCookie(null, "KenzieToken");
+		console;
+		router.push("/");
+	};
+	return (
+		<AuthContext.Provider value={{ userMail, login, logout }}>{children}</AuthContext.Provider>
+	);
+};
 
-export const useAuth = () => useContext(AuthContext)
+export const useAuthContext = () => useContext(AuthContext);
