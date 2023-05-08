@@ -1,7 +1,7 @@
-import { Box, Center, Button, Heading } from "@chakra-ui/react"
-import image from "../../../public/image.png"
-import Image from "next/image"
-import ModalRegisterUser from "../modal/modalRegisterUser"
+import { Box, Center, Button, Heading } from "@chakra-ui/react";
+import image from "../../../public/image.png";
+import Image from "next/image";
+import ModalRegisterUser from "../modal/modalRegisterUser";
 
 const HomePage = () => {
 	return (
@@ -16,13 +16,13 @@ const HomePage = () => {
 				<Heading as="h1" size="xl" fontWeight="black" mt="auto" mb="auto">
 					TENHA ACESSO A TODOS OS SEUS CONTATOS DE FORMA RÁPIDA E ORGANIZADA
 				</Heading>
-				<ModalRegisterUser />
+
 				<Center mt="auto" mb="auto">
 					<Image src={image} alt="Pessoas usando computador e celular" />
 				</Center>
 			</Center>
 		</>
-	)
-}
+	);
+};
 
-export default HomePage
+export default HomePage;
