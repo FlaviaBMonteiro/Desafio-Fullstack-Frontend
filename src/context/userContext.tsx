@@ -1,12 +1,8 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-// userContext.tsx
-import { useState, useEffect, createContext, useContext } from "react";
 import api from "@/services/api";
-import { iUser, iUserData, iUserProps } from "@/types/user.interface";
+import { useState, useEffect, createContext, useContext } from "react";
+import { iUser, iUserCreate, iUserData, iUserProps, iUserUpdate } from "@/types/user.interface";
 import { iContactCard } from "@/types/contact.interface";
 import { destroyCookie, parseCookies } from "nookies";
-
-import { useAuthContext } from "./authContext";
 import { useToast } from "@chakra-ui/react";
 
 export const UserContext = createContext<iUserData>({} as iUserData);
@@ -17,6 +13,7 @@ export const UserProvider = ({ children }: iUserProps) => {
 		position: "top",
 		duration: 3000,
 		isClosable: true,
+		variant: "left-accent",
 	});
 	const [contacts, setContacts] = useState<iContactCard[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -69,8 +66,35 @@ export const UserProvider = ({ children }: iUserProps) => {
 		}
 	};
 
+	const createUser = async (data: iUserCreate) => {
+		await api
+			.post<iUser>("/users", data)
+			.then((resp) => {
+				toast({ status: "success", title: "Usuário criado com sucesso!" });
+				return true;
+			})
+			.catch((err) => {
+				toast({ status: "error", description: err.response.data.message });
+				throw err;
+			});
+	};
+
+	const updateUser = async (data: iUserUpdate, userId: string) => {
+		await api
+			.patch<iUser>(`/users/${userId}`, data)
+			.then(({ data }) => {
+				setUser(data);
+				toast({ status: "success", title: "Usuário atualizado com sucesso!" });
+			})
+			.catch((err) => {
+				toast({ status: "error", description: err.response.data.message });
+			});
+	};
+
 	return (
-		<UserContext.Provider value={{ user, setUser, getUser, isLoading, contacts }}>
+		<UserContext.Provider
+			value={{ isLoading, user, setUser, getUser, createUser, updateUser, contacts }}
+		>
 			{children}
 		</UserContext.Provider>
 	);

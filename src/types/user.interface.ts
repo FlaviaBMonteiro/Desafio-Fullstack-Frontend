@@ -29,7 +29,20 @@ export interface iUserLogin {
 	email: string;
 	password: string;
 }
-
+export interface iUserCreate {
+	email: string;
+	password: string;
+	name: string;
+	phone: string;
+	imgURL: string;
+}
+export interface iUserUpdate {
+	email?: string;
+	password?: string;
+	name?: string;
+	phone?: string;
+	imgURL?: string;
+}
 export interface iHeaderProps {
 	email?: string;
 	token?: string;
@@ -46,9 +59,12 @@ export interface iUserProps {
 	children: ReactNode;
 }
 export interface iUserData {
+	isLoading: boolean;
 	user: iUser | null;
 	setUser: Dispatch<SetStateAction<iUser | null>>;
-	isLoading: boolean;
-	getUser: (email: string) => Promise<void>;
+	getUser: () => Promise<void>;
+	createUser: (data: iUserCreate) => Promise<void>;
+	updateUser: (data: iUserUpdate, userId: string) => Promise<void>;
+
 	contacts: iContactCard[];
 }
