@@ -4,9 +4,7 @@ import { iUserLogin } from "./user.interface";
 export interface iAuthContext {
 	login: (userData: iUserLogin) => void;
 	logout: () => void;
-	userMail: string;
 }
-
 export interface iAuthtProps {
 	children: ReactNode;
 }
