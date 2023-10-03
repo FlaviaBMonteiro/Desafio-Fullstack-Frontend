@@ -2,7 +2,6 @@ import {
 	Button,
 	FormControl,
 	FormErrorMessage,
-	FormHelperText,
 	FormLabel,
 	Input,
 	InputGroup,
@@ -10,40 +9,40 @@ import {
 	Modal,
 	ModalBody,
 	ModalContent,
-	ModalCloseButton,
 	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
 	useDisclosure,
+	Spacer,
 } from "@chakra-ui/react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { iUserLogin } from "@/types/user.interface";
 import { useAuthContext } from "@/context/authContext";
+import { useState } from "react";
 
 const ModalLoginUser = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { login } = useAuthContext();
-	const formschame = yup.object().shape({
-		email: yup.string().email("deve ser um e-mail válido").required("e-mail obrigatório"),
-		password: yup.string().required("Senha obrigatória"),
-	});
-	const [inputEmail, setInputEmail] = useState("");
-	const [inputPassword, setInputPassword] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
 
-	const emailError = inputEmail === "";
-	const passwordError = inputPassword === "";
+	const formSchema = yup.object().shape({
+		email: yup
+			.string()
+			.email("Por favor, digite um email válido")
+			.required("Por favor, digite seu email"),
+		password: yup.string().required("Por favor, digite sua senha"),
+	});
 
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm<iUserLogin>({
-		resolver: yupResolver(formschame),
+		resolver: yupResolver(formSchema),
+		mode: "onChange", // Ative o modo onChange para validação em tempo real
 	});
 
 	const onFormSubmit = (formData: iUserLogin) => {
@@ -61,7 +60,7 @@ const ModalLoginUser = () => {
 				<ModalContent>
 					<ModalHeader>L o g i n</ModalHeader>
 					<ModalBody pb={6}>
-						<FormControl id="email" isRequired isInvalid={emailError}>
+						<FormControl id="email" isRequired isInvalid={!!errors.email}>
 							<FormLabel>E-mail</FormLabel>
 							<Input
 								required
@@ -69,27 +68,28 @@ const ModalLoginUser = () => {
 								errorBorderColor="red.300"
 								type="email"
 								{...register("email")}
-								onChange={(e) => setInputEmail(e.target.value)}
+								placeholder="Digite seu email"
+								margin="-15px 0px 20px 0px"
 							/>
-							{!emailError ? (
-								<FormHelperText>Digite seu e-mail</FormHelperText>
-							) : (
-								<FormErrorMessage>{errors.email?.message}</FormErrorMessage>
-							)}
+							<FormErrorMessage margin="-20px 0px 0px 0px" fontSize="small">
+								{errors.email?.message}
+							</FormErrorMessage>
 						</FormControl>
-						<FormControl id="password" isRequired isInvalid={passwordError}>
+						<FormControl id="password" isRequired isInvalid={!!errors.password}>
 							<FormLabel>Senha</FormLabel>
 							<InputGroup>
 								<Input
 									required
 									focusBorderColor="blue.300"
 									errorBorderColor="red.300"
-									type={showPassword ? "text" : "password"}
+									type="password"
 									{...register("password")}
-									onChange={(e) => setInputPassword(e.target.value)}
+									placeholder="Digite sua senha"
+									margin="-8px 0px 20px 0px"
 								/>
 								<InputRightElement h={"full"}>
 									<Button
+										margin="-8px 0px 20px 0px"
 										variant={"ghost"}
 										onClick={() => setShowPassword((showPassword) => !showPassword)}
 									>
@@ -97,14 +97,17 @@ const ModalLoginUser = () => {
 									</Button>
 								</InputRightElement>
 							</InputGroup>
-							{!passwordError ? (
-								<FormHelperText>digite sua senha</FormHelperText>
-							) : (
-								<FormErrorMessage>{errors.password?.message}</FormErrorMessage>
-							)}
+
+							<FormErrorMessage margin="-20px 0px 0px 0px">
+								{errors.password?.message}
+							</FormErrorMessage>
 						</FormControl>
 					</ModalBody>
 					<ModalFooter>
+						<Button size="lg" onClick={onClose}>
+							Cancel
+						</Button>
+						<Spacer />
 						<Button
 							size="lg"
 							variant={"default"}
@@ -114,9 +117,6 @@ const ModalLoginUser = () => {
 							}}
 						>
 							Entrar
-						</Button>
-						<Button size="lg" onClick={onClose}>
-							Cancel
 						</Button>
 					</ModalFooter>
 				</ModalContent>

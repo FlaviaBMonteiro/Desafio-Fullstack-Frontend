@@ -17,6 +17,7 @@ export const AuthProvider = ({ children }: iAuthtProps) => {
 		position: "top",
 		duration: 3000,
 		isClosable: true,
+		variant: "left-accent",
 	});
 
 	const login = async (userData: iUserLogin) => {
@@ -44,14 +45,14 @@ export const AuthProvider = ({ children }: iAuthtProps) => {
 					path: "/",
 				});
 
-				getUser(response.data.email);
+				getUser();
 				router.push("/home");
 			})
 			.catch((err) => {
 				toast({
 					title: "Erro ao fazer login",
 					status: "error",
-					description: err.message,
+					description: "email ou senha inválidos",
 				});
 			});
 	};
