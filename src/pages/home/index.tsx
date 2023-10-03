@@ -1,30 +1,35 @@
-import { Grid, Flex, Box, Center } from "@chakra-ui/react";
-import { GetServerSideProps } from "next";
-import HomePage from "@/components/home/homepage";
+import { Box, Flex } from "@chakra-ui/react";
+import { useUserContext } from "@/context/userContext";
 import HeaderMenu from "@/components/home/headerMenu";
-import nookies from "nookies";
 import Dashboard from "@/components/home/dashboard";
-import { UserProvider } from "@/context/userContext";
-import { iHeaderProps } from "@/types/user.interface";
+import HomePage from "@/components/home/homepage";
+import { parseCookies } from "nookies";
 
-const Main = ({ email, token }: iHeaderProps) => {
+const Main = () => {
+	const { user, isLoading } = useUserContext();
+
 	return (
 		<Box>
-			<HeaderMenu />
-
-			{email ? (
-				<Flex
-					mt="5"
-					flexDirection="column"
-					textAlign="center"
-					h="85vh"
-					bgGradient="linear(to-b, #ffffff 0%, #f8fcff 21%, #e7f3fe 51%, #75a1de 100%)"
-				>
-					<Dashboard />
+			{isLoading ? (
+				<Flex justifyContent="center" gap="5">
+					<p>Carregando...</p>
 				</Flex>
 			) : (
 				<>
-					<HomePage />
+					<HeaderMenu />
+					{user ? (
+						<Flex
+							mt="5"
+							flexDirection="column"
+							textAlign="center"
+							h="85vh"
+							bgGradient="linear(to-b, #ffffff 0%, #f8fcff 21%, #e7f3fe 51%, #75a1de 100%)"
+						>
+							<Dashboard />
+						</Flex>
+					) : (
+						<HomePage />
+					)}
 				</>
 			)}
 		</Box>
@@ -32,13 +37,3 @@ const Main = ({ email, token }: iHeaderProps) => {
 };
 
 export default Main;
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-	const cookies = nookies.get(ctx);
-
-	if (!cookies["KenzieToken"]) {
-		return { redirect: { destination: "/", permanent: false } };
-	}
-
-	return { props: {} };
-};

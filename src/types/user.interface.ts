@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 import { iContact, iContactCard } from "./contact.interface";
 
 export interface iUser {
@@ -45,8 +45,10 @@ export interface iUserEmail {
 export interface iUserProps {
 	children: ReactNode;
 }
-
 export interface iUserData {
-	user?: iUser;
+	user: iUser | null;
+	setUser: Dispatch<SetStateAction<iUser | null>>;
+	isLoading: boolean;
+	getUser: (email: string) => Promise<void>;
 	contacts: iContactCard[];
 }

@@ -1,17 +1,26 @@
 import { theme } from "@/styles/globals";
 import { ChakraProvider } from "@chakra-ui/react";
-import { AuthProvider } from "@/context/authContext";
 import type { AppProps } from "next/app";
 import { UserProvider } from "@/context/userContext";
+import { useUserContext } from "@/context/userContext";
+import { AuthProvider } from "@/context/authContext";
+import { parseCookies } from "nookies";
+import { useRouter } from "next/router";
 
-export default function App({ Component, pageProps }: AppProps) {
+function MyApp({ Component, pageProps }: AppProps) {
+	const router = useRouter();
+	const cookies = parseCookies();
+	const userToken = cookies["KenzieToken"];
+
 	return (
 		<ChakraProvider theme={theme}>
-			<AuthProvider>
-				<UserProvider>
+			<UserProvider>
+				<AuthProvider>
 					<Component {...pageProps} />
-				</UserProvider>
-			</AuthProvider>
+				</AuthProvider>
+			</UserProvider>
 		</ChakraProvider>
 	);
 }
+
+export default MyApp;

@@ -1,5 +1,5 @@
-import { iContactCard } from "@/types/contact.interface"
-import EditContactMenu from "./editContactMenu"
+import { iContactCard } from "@/types/contact.interface";
+import EditContactMenu from "./editContactMenu";
 import {
 	Card,
 	CardHeader,
@@ -15,18 +15,18 @@ import {
 	Menu,
 	MenuButton,
 	MenuList,
-} from "@chakra-ui/react"
-import { StarIcon, HamburgerIcon, PhoneIcon, EmailIcon } from "@chakra-ui/icons"
-import { useState } from "react"
+} from "@chakra-ui/react";
+import { StarIcon, HamburgerIcon, PhoneIcon, EmailIcon } from "@chakra-ui/icons";
+import { useState } from "react";
 
 const ContactCard = ({ id, email, name, phone, imgURL, isFavorite }: iContactCard) => {
-	const [viewContact, setviewContact] = useState(phone)
+	const [viewContact, setviewContact] = useState(phone);
 	const changePhone = () => {
-		setviewContact(phone)
-	}
+		setviewContact(phone);
+	};
 	const changeEmail = () => {
-		setviewContact(email)
-	}
+		setviewContact(email);
+	};
 	return (
 		<Card>
 			<CardHeader>
@@ -82,7 +82,7 @@ const ContactCard = ({ id, email, name, phone, imgURL, isFavorite }: iContactCar
 				/>
 			</CardFooter>
 		</Card>
-	)
-}
+	);
+};
 
-export default ContactCard
+export default ContactCard;

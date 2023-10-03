@@ -8,26 +8,26 @@ import {
 	MenuOptionGroup,
 	MenuDivider,
 	IconButton,
-} from "@chakra-ui/react"
+} from "@chakra-ui/react";
 
 interface Props {
-	phone: string
-	email: string
+	phone: string;
+	email: string;
 }
 
-import { HamburgerIcon, EditIcon, CopyIcon, StarIcon, DeleteIcon } from "@chakra-ui/icons"
+import { HamburgerIcon, EditIcon, CopyIcon, StarIcon, DeleteIcon } from "@chakra-ui/icons";
 
 const EditContactMenu = ({ email, phone }: Props) => {
 	const copyText = (text: string) => {
 		navigator.clipboard
 			.writeText(text)
 			.then(() => {
-				console.log("Texto copiado:", text)
+				console.log("Texto copiado:", text);
 			})
 			.catch((error) => {
-				console.error("Erro ao copiar o texto:", error)
-			})
-	}
+				console.error("Erro ao copiar o texto:", error);
+			});
+	};
 	return (
 		<>
 			<Menu>
@@ -52,7 +52,7 @@ const EditContactMenu = ({ email, phone }: Props) => {
 				</MenuList>
 			</Menu>
 		</>
-	)
-}
+	);
+};
 
-export default EditContactMenu
+export default EditContactMenu;
