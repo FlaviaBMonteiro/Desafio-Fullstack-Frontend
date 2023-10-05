@@ -118,6 +118,12 @@ const globalTheme = {
 				},
 			},
 		},
+		toast: {
+			position: "top",
+			duration: 3000,
+			isClosable: true,
+			variant: "left-accent",
+		},
 	},
 };
 

@@ -3,31 +3,24 @@ import { useState, useEffect, createContext, useContext } from "react";
 import { iUser, iUserCreate, iUserData, iUserProps, iUserUpdate } from "@/types/user.interface";
 import { iContactCard } from "@/types/contact.interface";
 import { destroyCookie, parseCookies } from "nookies";
-import { useToast } from "@chakra-ui/react";
+
+import { getBearer, getAuthData } from "../utils/authUtils";
+import CustomToast from "@/styles/toast";
 
 export const UserContext = createContext<iUserData>({} as iUserData);
 
 export const UserProvider = ({ children }: iUserProps) => {
 	const [user, setUser] = useState<iUser | null>(null);
-	const toast = useToast({
-		position: "top",
-		duration: 3000,
-		isClosable: true,
-		variant: "left-accent",
-	});
+	const customToast = CustomToast();
 	const [contacts, setContacts] = useState<iContactCard[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
 	// Verificar se o token existe e contém um email
 	useEffect(() => {
 		setIsLoading(true);
-		const cookies = parseCookies();
-		const dataUser = cookies["KenzieToken"];
-
-		if (dataUser) {
-			const authData = JSON.parse(decodeURIComponent(dataUser));
+		const authData = getAuthData();
+		if (authData) {
 			const { email } = authData;
-
 			if (email) {
 				getUser();
 			}
@@ -36,58 +29,61 @@ export const UserProvider = ({ children }: iUserProps) => {
 	}, []);
 
 	const getUser = async () => {
-		const cookies = parseCookies();
-		const dataUser = cookies["KenzieToken"];
-		setIsLoading(true);
+		const authData = getAuthData();
+		const config = getBearer();
 
-		if (dataUser) {
-			const authData = JSON.parse(decodeURIComponent(dataUser));
-			const { token, email } = authData;
-			const config = {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			};
-
+		if (authData && config) {
 			try {
+				const { email } = authData;
 				const response = await api.get(`/users/${email}/`, config);
 				setUser(response.data);
-
 				setIsLoading(false);
 			} catch (err: any) {
-				toast({
-					title: "Erro ao obter dados do usuário",
-					status: "error",
-					description: err.message,
-				});
-				destroyCookie(null, "KenzieToken", { path: "/" });
+				handleError(err);
 			}
+		} else {
+			setIsLoading(false);
 		}
+	};
+
+	const handleError = (err: any) => {
+		const errorMessage = `${err.response.status} ${err.response.statusText}`;
+		customToast.showToast(errorMessage, "error", err.response.data.message);
+		destroyCookie(null, "KenzieToken", { path: "/" });
 	};
 
 	const createUser = async (data: iUserCreate) => {
 		await api
 			.post<iUser>("/users", data)
 			.then((resp) => {
-				toast({ status: "success", title: "Usuário criado com sucesso!" });
+				customToast.showToast(
+					`Usuário ${resp.data.name} criado`,
+					"success",
+					"Por favor, faça login."
+				);
 				return true;
 			})
 			.catch((err) => {
-				toast({ status: "error", description: err.response.data.message });
+				handleError(err);
 				throw err;
 			});
 	};
 
 	const updateUser = async (data: iUserUpdate, userId: string) => {
-		await api
-			.patch<iUser>(`/users/${userId}`, data)
-			.then(({ data }) => {
-				setUser(data);
-				toast({ status: "success", title: "Usuário atualizado com sucesso!" });
-			})
-			.catch((err) => {
-				toast({ status: "error", description: err.response.data.message });
-			});
+		const authData = getAuthData();
+		const config = getBearer();
+
+		if (authData && config) {
+			await api
+				.patch<iUser>(`/users/${user?.id}`, data, config)
+				.then(({ data }) => {
+					setUser(data);
+					customToast.showToast("", "success", "Dados atualizados");
+				})
+				.catch((err) => {
+					handleError(err);
+				});
+		}
 	};
 
 	return (

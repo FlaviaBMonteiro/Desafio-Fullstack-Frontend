@@ -56,17 +56,16 @@ const ModalRegisterContact = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
+		reset,
 	} = useForm<iContactCreate>({
 		resolver: yupResolver(formSchema),
 		mode: "onChange",
 	});
 
 	const onFormSubmit = async (formData: iContactCreate) => {
-		console.log("OnFormSubimit", formData);
-
 		try {
 			await createContact(formData);
-
+			reset();
 			onClose();
 		} catch (error) {
 			console.log("Erro", error);

@@ -12,7 +12,6 @@ export interface iToken {
 export interface iAuthContext {
 	login: (userData: iUserLogin) => void;
 	logout: () => void;
-	auth: () => iAuthData;
 }
 
 export interface iAuthData {

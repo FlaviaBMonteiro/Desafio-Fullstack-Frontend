@@ -1,34 +1,24 @@
 import api from "@/services/api";
 import { iUserEmail, iUserLogin } from "@/types//user.interface";
 import { iAuthContext, iAuthData, iAuthtProps, iToken } from "@/types/auth.interface";
-import { Box, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { createContext, useContext, useState } from "react";
 import { useUserContext } from "./userContext";
+import CustomToast from "@/styles/toast";
 
 export const AuthContext = createContext<iAuthContext>({} as iAuthContext);
 
 export const AuthProvider = ({ children }: iAuthtProps) => {
 	const router = useRouter();
-
 	const { user, setUser, getUser } = useUserContext();
-	const toast = useToast({
-		position: "top",
-		duration: 3000,
-		isClosable: true,
-		variant: "left-accent",
-	});
+	const customToast = CustomToast();
 
 	const login = async (userData: iUserLogin) => {
 		await api
 			.post("login", userData)
 			.then(async (response) => {
-				toast({
-					title: "Login realizado.",
-					status: "success",
-					description: "Logo você será redirecionado para o site.",
-				});
+				customToast.showToast("Login", "success", "Você será redirecionado para o site.");
 
 				// Criar um objeto JSON com o token e o e-mail
 				const authData = {
@@ -50,11 +40,8 @@ export const AuthProvider = ({ children }: iAuthtProps) => {
 				return user;
 			})
 			.catch((err) => {
-				toast({
-					title: "Erro ao fazer login",
-					status: "error",
-					description: "email ou senha inválidos",
-				});
+				const errorMessage = err.response.status + " " + err.response.statusText;
+				customToast.showToast(errorMessage, "error", err.response.data.message);
 			});
 	};
 	const logout = () => {
@@ -63,34 +50,7 @@ export const AuthProvider = ({ children }: iAuthtProps) => {
 		router.push("/");
 	};
 
-	const auth = (): iAuthData => {
-		const cookies = parseCookies();
-		const dataUser = cookies["KenzieToken"];
-
-		if (dataUser) {
-			const authData = JSON.parse(decodeURIComponent(dataUser));
-			const { token, email } = authData;
-			const authtoken = {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			};
-
-			return { token, email, authtoken };
-		} else {
-			const token = "";
-			const email = "";
-			const authtoken = {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-			};
-
-			return { token, email, authtoken };
-		}
-	};
-
-	return <AuthContext.Provider value={{ login, logout, auth }}>{children}</AuthContext.Provider>;
+	return <AuthContext.Provider value={{ login, logout }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuthContext = () => useContext(AuthContext);

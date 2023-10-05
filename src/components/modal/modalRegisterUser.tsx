@@ -56,6 +56,7 @@ const ModalRegisterUser = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
+		reset,
 	} = useForm<iUserCreate>({
 		resolver: yupResolver(formSchema),
 		mode: "onChange", // Ative o modo onChange para validação em tempo real
@@ -64,6 +65,7 @@ const ModalRegisterUser = () => {
 	const onFormSubmit = async (formData: iUserCreate) => {
 		try {
 			await createUser(formData);
+			reset();
 			onClose();
 		} catch (error) {
 			// Lida com erros de registro, se necessário

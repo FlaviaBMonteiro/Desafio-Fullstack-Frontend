@@ -4,23 +4,16 @@ import { useUserContext } from "./userContext";
 import { destroyCookie, parseCookies } from "nookies";
 import { iContact, iContactCreate, iContactData } from "@/types/contact.interface";
 import { iUserProps } from "@/types/user.interface";
-import { useToast } from "@chakra-ui/react";
-import { useAuthContext } from "./authContext";
+import { getBearer, getAuthData } from "../utils/authUtils";
+import CustomToast from "@/styles/toast";
 
 export const ContactContext = createContext<iContactData>({} as iContactData);
 
 export const ContactProvider = ({ children }: iUserProps) => {
 	const [contacts, setContacts] = useState<iContact[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
 	const { user } = useUserContext();
-	const { auth } = useAuthContext();
-	const { token, email, authtoken } = auth();
-	const toast = useToast({
-		position: "top",
-		duration: 3000,
-		isClosable: true,
-		variant: "left-accent",
-	});
+	const customToast = CustomToast();
+	const config = getBearer();
 
 	const addContactToList = (contact: iContact) => {
 		setContacts([...contacts, contact]);
@@ -28,31 +21,36 @@ export const ContactProvider = ({ children }: iUserProps) => {
 	};
 
 	const getContacts = async () => {
-		try {
-			const response = await api.get(`/contacts/users/${user?.id}`, authtoken);
-			setContacts(response.data.contacts);
-		} catch (err: any) {
-			toast({
-				title: "Erro ao obter dados do usuário",
-				status: "error",
-				description: err.message,
-			});
-			destroyCookie(null, "KenzieToken", { path: "/" });
+		if (user && config) {
+			try {
+				const response = await api.get(`/contacts/users/${user.id}`, config);
+				setContacts(response.data.contacts);
+			} catch (err: any) {
+				const errorMessage = err.response.status + " " + err.response.statusText;
+				customToast.showToast(errorMessage, "error", err.response.data.message);
+				destroyCookie(null, "KenzieToken", { path: "/" });
+			}
 		}
+		customToast.showToast("Erro ao carregar", "error", "Faça login novamente");
+		destroyCookie(null, "KenzieToken", { path: "/" });
 	};
 
 	const createContact = async (data: iContactCreate) => {
-		await api
-			.post<iContact>(`/contacts/`, data, authtoken)
-			.then((resp) => {
-				toast({ status: "success", title: "Usuário criado com sucesso!" });
-				console.log(resp.data);
-				addContactToList(resp.data);
-			})
-			.catch((err) => {
-				toast({ status: "error", description: err.response.data.message });
-				throw err;
-			});
+		if (user && config) {
+			await api
+				.post<iContact>(`/contacts/`, data, config)
+				.then((resp) => {
+					customToast.showToast("", "sucess", "Contato adicionado");
+					console.log(resp.data);
+					addContactToList(resp.data);
+				})
+				.catch((err) => {
+					const errorMessage = err.response.status + " " + err.response.statusText;
+					customToast.showToast(errorMessage, "error", err.response.data.message);
+					throw err;
+				});
+		}
+		customToast.showToast("Erro ao carregar", "error", "Faça login novamente");
 	};
 
 	return (
