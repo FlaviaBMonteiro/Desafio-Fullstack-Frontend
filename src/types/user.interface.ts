@@ -43,13 +43,6 @@ export interface iUserUpdate {
 	phone?: string;
 	imgURL?: string;
 }
-export interface iHeaderProps {
-	email?: string;
-	token?: string;
-	id?: string;
-	avatar?: string;
-	name?: string;
-}
 
 export interface iUserEmail {
 	email: string;
@@ -65,6 +58,5 @@ export interface iUserData {
 	getUser: () => Promise<void>;
 	createUser: (data: iUserCreate) => Promise<void>;
 	updateUser: (data: iUserUpdate, userId: string) => Promise<void>;
-
 	contacts: iContactCard[];
 }

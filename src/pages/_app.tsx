@@ -6,6 +6,7 @@ import { useUserContext } from "@/context/userContext";
 import { AuthProvider } from "@/context/authContext";
 import { parseCookies } from "nookies";
 import { useRouter } from "next/router";
+import { ContactProvider } from "@/context/contactContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
 	const router = useRouter();
@@ -16,7 +17,9 @@ function MyApp({ Component, pageProps }: AppProps) {
 		<ChakraProvider theme={theme}>
 			<UserProvider>
 				<AuthProvider>
-					<Component {...pageProps} />
+					<ContactProvider>
+						<Component {...pageProps} />
+					</ContactProvider>
 				</AuthProvider>
 			</UserProvider>
 		</ChakraProvider>

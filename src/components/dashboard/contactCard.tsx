@@ -28,13 +28,15 @@ const ContactCard = ({ id, email, name, phone, imgURL, isFavorite }: iContactCar
 		setviewContact(email);
 	};
 	return (
-		<Card>
+		<Card h="400px" gap="1">
 			<CardHeader>
 				<Flex>
 					<IconButton
 						colorScheme="blue"
 						aria-label="Favorito"
 						variant="outline"
+						bgColor="white"
+						color={isFavorite ? "blue.400" : "blue.50"}
 						border="0px"
 						icon={<StarIcon />}
 					/>

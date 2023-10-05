@@ -9,7 +9,7 @@ const Main = () => {
 	const { user, isLoading } = useUserContext();
 
 	return (
-		<Box>
+		<Flex h="100vh" w="100hw" direction="column">
 			{isLoading ? (
 				<Flex justifyContent="center" gap="5">
 					<p>Carregando...</p>
@@ -19,10 +19,8 @@ const Main = () => {
 					<HeaderMenu />
 					{user ? (
 						<Flex
-							mt="5"
 							flexDirection="column"
 							textAlign="center"
-							h="85vh"
 							bgGradient="linear(to-b, #ffffff 0%, #f8fcff 21%, #e7f3fe 51%, #75a1de 100%)"
 						>
 							<Dashboard />
@@ -32,7 +30,7 @@ const Main = () => {
 					)}
 				</>
 			)}
-		</Box>
+		</Flex>
 	);
 };
 

@@ -25,7 +25,7 @@ const HeaderMenu = () => {
 	const { user } = useUserContext();
 	return (
 		<>
-			<Flex boxShadow="md" pr="6" pl="6" pt="2" pb="2" bg="blue.600" alignItems="center">
+			<Flex boxShadow="md" pr="6" pl="6" pt="2" pb="2" bg="blue.600" alignItems="center" h="10vh">
 				<Box ml="10">
 					<Image src={logo} alt="logo" />
 				</Box>

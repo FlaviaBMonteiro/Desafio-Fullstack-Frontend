@@ -1,9 +1,9 @@
 import api from "@/services/api";
 import { iUserEmail, iUserLogin } from "@/types//user.interface";
-import { iAuthContext, iAuthtProps, iToken } from "@/types/auth.interface";
+import { iAuthContext, iAuthData, iAuthtProps, iToken } from "@/types/auth.interface";
 import { Box, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { destroyCookie, setCookie } from "nookies";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { createContext, useContext, useState } from "react";
 import { useUserContext } from "./userContext";
 
@@ -12,7 +12,7 @@ export const AuthContext = createContext<iAuthContext>({} as iAuthContext);
 export const AuthProvider = ({ children }: iAuthtProps) => {
 	const router = useRouter();
 
-	const { setUser, getUser } = useUserContext();
+	const { user, setUser, getUser } = useUserContext();
 	const toast = useToast({
 		position: "top",
 		duration: 3000,
@@ -47,6 +47,7 @@ export const AuthProvider = ({ children }: iAuthtProps) => {
 
 				getUser();
 				router.push("/home");
+				return user;
 			})
 			.catch((err) => {
 				toast({
@@ -61,7 +62,35 @@ export const AuthProvider = ({ children }: iAuthtProps) => {
 		setUser(null);
 		router.push("/");
 	};
-	return <AuthContext.Provider value={{ login, logout }}>{children}</AuthContext.Provider>;
+
+	const auth = (): iAuthData => {
+		const cookies = parseCookies();
+		const dataUser = cookies["KenzieToken"];
+
+		if (dataUser) {
+			const authData = JSON.parse(decodeURIComponent(dataUser));
+			const { token, email } = authData;
+			const authtoken = {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			};
+
+			return { token, email, authtoken };
+		} else {
+			const token = "";
+			const email = "";
+			const authtoken = {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			};
+
+			return { token, email, authtoken };
+		}
+	};
+
+	return <AuthContext.Provider value={{ login, logout, auth }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuthContext = () => useContext(AuthContext);

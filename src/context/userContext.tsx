@@ -52,10 +52,9 @@ export const UserProvider = ({ children }: iUserProps) => {
 			try {
 				const response = await api.get(`/users/${email}/`, config);
 				setUser(response.data);
-				setContacts(response.data.contacts);
+
 				setIsLoading(false);
 			} catch (err: any) {
-				console.error("Erro ao obter dados do usuário:", err);
 				toast({
 					title: "Erro ao obter dados do usuário",
 					status: "error",
