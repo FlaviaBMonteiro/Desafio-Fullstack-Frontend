@@ -12,15 +12,15 @@ import {
 
 import { useUserContext } from "@/context/userContext";
 import React from "react";
+import DeleteConfirmationModal from "../modal/modalDeleteConfirmation";
 
 const DeleteUser = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { deleteUser } = useUserContext();
-	const cancelRef = React.useRef<HTMLElement | null>(null);
 
 	const onDelete = async () => {
 		await deleteUser();
-		onClose;
+		onClose(); // Certifique-se de chamar onClose para fechar o modal após a exclusão.
 	};
 
 	return (
@@ -28,28 +28,7 @@ const DeleteUser = () => {
 			<MenuItem bg={"blue.600"} color={"white"} onClick={onOpen}>
 				Deletar Usuário
 			</MenuItem>
-			<AlertDialog isOpen={isOpen} leastDestructiveRef={cancelRef} onClose={onClose}>
-				<AlertDialogOverlay>
-					<AlertDialogContent>
-						<AlertDialogHeader fontSize="lg" fontWeight="bold">
-							Deletar Usuário
-						</AlertDialogHeader>
-
-						<AlertDialogBody>
-							Tem certeza de que deseja deletar sua conta? Essa ação é irreversível.
-						</AlertDialogBody>
-
-						<AlertDialogFooter>
-							<Button onClick={onClose} colorScheme="blue">
-								Cancelar
-							</Button>
-							<Button onClick={onDelete} colorScheme="red" ml={3}>
-								Deletar
-							</Button>
-						</AlertDialogFooter>
-					</AlertDialogContent>
-				</AlertDialogOverlay>
-			</AlertDialog>
+			<DeleteConfirmationModal isOpen={isOpen} onClose={onClose} onDelete={onDelete} />
 		</>
 	);
 };

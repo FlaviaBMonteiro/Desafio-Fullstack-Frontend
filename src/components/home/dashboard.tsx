@@ -9,7 +9,7 @@ const Dashboard = () => {
 
 	useEffect(() => {
 		getContacts();
-	}, [getContacts, setContacts]);
+	}, []);
 
 	return (
 		<Box h="90vh" alignContent="center">

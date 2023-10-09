@@ -24,6 +24,7 @@ export const ContactProvider = ({ children }: iUserProps) => {
 		if (user && config) {
 			try {
 				const response = await api.get(`/contacts/users/${user.id}`, config);
+				console.log(user.id);
 				setContacts(response.data.contacts);
 			} catch (err: any) {
 				const errorMessage = err.response.status + " " + err.response.statusText;

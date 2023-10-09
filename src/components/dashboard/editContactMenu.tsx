@@ -1,7 +1,8 @@
 import React from "react";
-import { Menu, MenuButton, MenuList, MenuItem, IconButton } from "@chakra-ui/react";
+import { Menu, MenuButton, MenuList, MenuItem, IconButton, useDisclosure } from "@chakra-ui/react";
 import { HamburgerIcon, EditIcon, CopyIcon, StarIcon, DeleteIcon } from "@chakra-ui/icons";
 import { useContactContext } from "@/context/contactContext";
+import DeleteConfirmationModal from "../modal/modalDeleteConfirmation";
 
 interface Props {
 	phone: string;
@@ -11,6 +12,7 @@ interface Props {
 
 const EditContactMenu = ({ id, email, phone }: Props) => {
 	const { deleteContact } = useContactContext(); // Obtenha a função deleteContact do contexto
+	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	const copyText = (text: string) => {
 		navigator.clipboard
@@ -22,11 +24,9 @@ const EditContactMenu = ({ id, email, phone }: Props) => {
 				console.error("Erro ao copiar o texto:", error);
 			});
 	};
-
-	const handleDeleteContact = (id: number) => {
-		if (window.confirm("Tem certeza que deseja excluir este contato?")) {
-			deleteContact(id);
-		}
+	const onDelete = async (id: number) => {
+		deleteContact(id);
+		onClose(); // Certifique-se de chamar onClose para fechar o modal após a exclusão.
 	};
 
 	return (
@@ -49,9 +49,12 @@ const EditContactMenu = ({ id, email, phone }: Props) => {
 						Copiar Telefone
 					</MenuItem>
 					<MenuItem icon={<StarIcon />}>Adicionar aos favoritos</MenuItem>
-					<MenuItem onClick={() => handleDeleteContact(id)} icon={<DeleteIcon />}>
-						Excluir contato
-					</MenuItem>
+					<MenuItem onClick={onOpen}>Deletar Usuário</MenuItem>
+					<DeleteConfirmationModal
+						isOpen={isOpen}
+						onClose={onClose}
+						onDelete={() => onDelete(id)}
+					/>
 				</MenuList>
 			</Menu>
 		</>

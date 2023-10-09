@@ -12,9 +12,8 @@ import {
 	Text,
 	Spacer,
 } from "@chakra-ui/react";
-import { parseCookies } from "nookies";
+
 import ModalLoginUser from "@/components/modal/modalLoginUser";
-import { useRouter } from "next/router";
 import { useAuthContext } from "@/context/authContext";
 import { useUserContext } from "@/context/userContext";
 import DeleteUser from "../dashboard/DeleteUser";
@@ -32,7 +31,7 @@ const HeaderMenu = () => {
 				<Spacer />
 				<Box mr="10">
 					<Flex alignItems={"center"}>
-						{user?.name === "Flavia" ? (
+						{user?.name ? (
 							<>
 								<Text color={"white"} paddingRight={2}>
 									{user.name}

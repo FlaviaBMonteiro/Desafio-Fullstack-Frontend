@@ -3,17 +3,17 @@ import api from "@/services/api";
 import { useState, useEffect, createContext, useContext } from "react";
 import { iUser, iUserCreate, iUserData, iUserProps, iUserUpdate } from "@/types/user.interface";
 import { iContactCard } from "@/types/contact.interface";
+import { destroyCookie } from "nookies";
 import { getBearer, getAuthData } from "../utils/authUtils";
 import CustomToast from "@/styles/toast";
-import { destroyCookie } from "nookies";
 
 export const UserContext = createContext<iUserData>({} as iUserData);
 
 export const UserProvider = ({ children }: iUserProps) => {
 	const [user, setUser] = useState<iUser | null>(null);
 	const customToast = CustomToast();
-	const [isLoading, setIsLoading] = useState(true);
 
+	const [isLoading, setIsLoading] = useState(true);
 	useEffect(() => {
 		setIsLoading(true);
 		const authData = getAuthData();
