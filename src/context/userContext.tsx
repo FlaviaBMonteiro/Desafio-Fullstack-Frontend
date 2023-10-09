@@ -1,9 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import api from "@/services/api";
 import { useState, useEffect, createContext, useContext } from "react";
 import { iUser, iUserCreate, iUserData, iUserProps, iUserUpdate } from "@/types/user.interface";
 import { iContactCard } from "@/types/contact.interface";
-import { destroyCookie, parseCookies } from "nookies";
-
+import { destroyCookie } from "nookies";
 import { getBearer, getAuthData } from "../utils/authUtils";
 import CustomToast from "@/styles/toast";
 
@@ -15,7 +15,6 @@ export const UserProvider = ({ children }: iUserProps) => {
 	const [contacts, setContacts] = useState<iContactCard[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 
-	// Verificar se o token existe e contém um email
 	useEffect(() => {
 		setIsLoading(true);
 		const authData = getAuthData();

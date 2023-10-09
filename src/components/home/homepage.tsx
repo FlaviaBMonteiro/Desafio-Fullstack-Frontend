@@ -1,4 +1,4 @@
-import { Box, Center, Button, Heading, Flex } from "@chakra-ui/react";
+import { Center, Heading, Flex } from "@chakra-ui/react";
 import image from "../../../public/image.png";
 import Image from "next/image";
 import ModalRegisterUser from "../modal/modalRegisterUser";

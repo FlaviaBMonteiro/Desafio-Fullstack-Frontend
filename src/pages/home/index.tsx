@@ -1,9 +1,8 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { useUserContext } from "@/context/userContext";
 import HeaderMenu from "@/components/home/headerMenu";
 import Dashboard from "@/components/home/dashboard";
 import HomePage from "@/components/home/homepage";
-import { parseCookies } from "nookies";
 
 const Main = () => {
 	const { user, isLoading } = useUserContext();

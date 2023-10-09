@@ -1,5 +1,5 @@
 import api from "@/services/api";
-import { iUserEmail, iUserLogin } from "@/types//user.interface";
+import { iUserLogin } from "@/types//user.interface";
 import { iAuthContext, iAuthData, iAuthtProps, iToken } from "@/types/auth.interface";
 import { useRouter } from "next/router";
 import { destroyCookie, parseCookies, setCookie } from "nookies";

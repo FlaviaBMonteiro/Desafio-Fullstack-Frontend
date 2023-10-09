@@ -1,23 +1,17 @@
-import {
-	Menu,
-	MenuButton,
-	MenuList,
-	MenuItem,
-	MenuItemOption,
-	MenuGroup,
-	MenuOptionGroup,
-	MenuDivider,
-	IconButton,
-} from "@chakra-ui/react";
+import React from "react";
+import { Menu, MenuButton, MenuList, MenuItem, IconButton } from "@chakra-ui/react";
+import { HamburgerIcon, EditIcon, CopyIcon, StarIcon, DeleteIcon } from "@chakra-ui/icons";
+import { useContactContext } from "@/context/contactContext";
 
 interface Props {
 	phone: string;
 	email: string;
+	id: number;
 }
 
-import { HamburgerIcon, EditIcon, CopyIcon, StarIcon, DeleteIcon } from "@chakra-ui/icons";
+const EditContactMenu = ({ id, email, phone }: Props) => {
+	const { deleteContact } = useContactContext(); // Obtenha a função deleteContact do contexto
 
-const EditContactMenu = ({ email, phone }: Props) => {
 	const copyText = (text: string) => {
 		navigator.clipboard
 			.writeText(text)
@@ -28,6 +22,13 @@ const EditContactMenu = ({ email, phone }: Props) => {
 				console.error("Erro ao copiar o texto:", error);
 			});
 	};
+
+	const handleDeleteContact = (id: number) => {
+		if (window.confirm("Tem certeza que deseja excluir este contato?")) {
+			deleteContact(id);
+		}
+	};
+
 	return (
 		<>
 			<Menu>
@@ -48,7 +49,9 @@ const EditContactMenu = ({ email, phone }: Props) => {
 						Copiar Telefone
 					</MenuItem>
 					<MenuItem icon={<StarIcon />}>Adicionar aos favoritos</MenuItem>
-					<MenuItem icon={<DeleteIcon />}>Excluir contato</MenuItem>
+					<MenuItem onClick={() => handleDeleteContact(id)} icon={<DeleteIcon />}>
+						Excluir contato
+					</MenuItem>
 				</MenuList>
 			</Menu>
 		</>

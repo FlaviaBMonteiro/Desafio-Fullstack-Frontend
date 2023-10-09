@@ -40,7 +40,8 @@ export interface iContactUpdate {
 
 export interface iContactData {
 	contacts: iContact[];
-	createContact: (data: iContactCreate) => Promise<void>;
 	setContacts: Dispatch<SetStateAction<iContact[]>>;
 	getContacts: () => Promise<void>;
+	createContact: (data: iContactCreate) => Promise<void>;
+	deleteContact: (id: number) => Promise<void>;
 }

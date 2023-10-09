@@ -1,10 +1,7 @@
-import { useUserContext } from "@/context/userContext";
 import ContactCard from "../dashboard/contactCard";
-import { Box, Center, Flex, Text } from "@chakra-ui/react";
-import { parseCookies } from "nookies";
+import { Box, Center, Text } from "@chakra-ui/react";
 import ModalRegisterContact from "../modal/modalRegisterContact";
-import { useEffect, useState } from "react";
-import { iContact } from "@/types/contact.interface";
+import { useEffect } from "react";
 import { useContactContext } from "@/context/contactContext";
 
 const Dashboard = () => {
@@ -12,7 +9,7 @@ const Dashboard = () => {
 
 	useEffect(() => {
 		getContacts();
-	}, [setContacts]);
+	}, [getContacts, setContacts]);
 
 	return (
 		<Box h="90vh" alignContent="center">

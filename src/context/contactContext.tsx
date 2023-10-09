@@ -1,10 +1,10 @@
 import api from "@/services/api";
 import { createContext, useContext, useEffect, useState } from "react";
 import { useUserContext } from "./userContext";
-import { destroyCookie, parseCookies } from "nookies";
+import { destroyCookie } from "nookies";
 import { iContact, iContactCreate, iContactData } from "@/types/contact.interface";
 import { iUserProps } from "@/types/user.interface";
-import { getBearer, getAuthData } from "../utils/authUtils";
+import { getBearer } from "../utils/authUtils";
 import CustomToast from "@/styles/toast";
 
 export const ContactContext = createContext<iContactData>({} as iContactData);
@@ -31,8 +31,6 @@ export const ContactProvider = ({ children }: iUserProps) => {
 				destroyCookie(null, "KenzieToken", { path: "/" });
 			}
 		}
-		customToast.showToast("Erro ao carregar", "error", "Faça login novamente");
-		destroyCookie(null, "KenzieToken", { path: "/" });
 	};
 
 	const createContact = async (data: iContactCreate) => {
@@ -40,8 +38,7 @@ export const ContactProvider = ({ children }: iUserProps) => {
 			await api
 				.post<iContact>(`/contacts/`, data, config)
 				.then((resp) => {
-					customToast.showToast("", "sucess", "Contato adicionado");
-					console.log(resp.data);
+					customToast.showToast("Contato", "success", "Criado com sucesso.");
 					addContactToList(resp.data);
 				})
 				.catch((err) => {
@@ -50,11 +47,26 @@ export const ContactProvider = ({ children }: iUserProps) => {
 					throw err;
 				});
 		}
-		customToast.showToast("Erro ao carregar", "error", "Faça login novamente");
+	};
+
+	const deleteContact = async (contactId: number) => {
+		if (user && config) {
+			try {
+				await api.delete(`/contacts/${contactId}`, config);
+				customToast.showToast("", "success", "Contato excluído");
+				setContacts(contacts.filter((contact) => contact.id !== contactId));
+			} catch (err: any) {
+				const errorMessage = err.response.status + " " + err.response.statusText;
+				customToast.showToast(errorMessage, "error", err.response.data.message);
+				throw err;
+			}
+		}
 	};
 
 	return (
-		<ContactContext.Provider value={{ contacts, setContacts, createContact, getContacts }}>
+		<ContactContext.Provider
+			value={{ contacts, setContacts, getContacts, createContact, deleteContact }}
+		>
 			{children}
 		</ContactContext.Provider>
 	);

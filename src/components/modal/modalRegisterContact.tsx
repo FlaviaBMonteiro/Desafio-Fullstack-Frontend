@@ -5,8 +5,6 @@ import {
 	FormErrorMessage,
 	FormLabel,
 	Input,
-	InputGroup,
-	InputRightElement,
 	Modal,
 	ModalBody,
 	ModalContent,
@@ -20,7 +18,6 @@ import {
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { iContactCreate } from "@/types/contact.interface";
 import { useContactContext } from "@/context/contactContext";
 
@@ -38,7 +35,7 @@ const ModalRegisterContact = () => {
 		name: yup
 			.string()
 			.required("Por favor, digite um nome válido")
-			.min(3, "O nome deve conter pelo menos 3 caracteres"),
+			.min(6, "O nome deve conter pelo menos 6 caracteres"),
 		phone: yup
 			.string()
 			.required("Por favor, digite um telefone válido")
