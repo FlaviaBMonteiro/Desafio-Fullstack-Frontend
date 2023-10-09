@@ -53,7 +53,7 @@ export const ContactProvider = ({ children }: iUserProps) => {
 		if (user && config) {
 			try {
 				await api.delete(`/contacts/${contactId}`, config);
-				customToast.showToast("", "success", "Contato excluído");
+				customToast.showToast("Contato", "success", "Contato excluído");
 				setContacts(contacts.filter((contact) => contact.id !== contactId));
 			} catch (err: any) {
 				const errorMessage = err.response.status + " " + err.response.statusText;

@@ -58,5 +58,5 @@ export interface iUserData {
 	getUser: () => Promise<void>;
 	createUser: (data: iUserCreate) => Promise<void>;
 	updateUser: (data: iUserUpdate, userId: string) => Promise<void>;
-	contacts: iContactCard[];
+	deleteUser: () => Promise<void>;
 }

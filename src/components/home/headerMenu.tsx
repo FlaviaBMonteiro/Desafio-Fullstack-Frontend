@@ -17,12 +17,12 @@ import ModalLoginUser from "@/components/modal/modalLoginUser";
 import { useRouter } from "next/router";
 import { useAuthContext } from "@/context/authContext";
 import { useUserContext } from "@/context/userContext";
+import DeleteUser from "../dashboard/DeleteUser";
 
 const HeaderMenu = () => {
-	const router = useRouter();
-	const cookies = parseCookies();
 	const { logout } = useAuthContext();
 	const { user } = useUserContext();
+
 	return (
 		<>
 			<Flex boxShadow="md" pr="6" pl="6" pt="2" pb="2" bg="blue.600" alignItems="center" h="10vh">
@@ -48,6 +48,10 @@ const HeaderMenu = () => {
 										<Avatar size={"sm"} src={user.imgURL} />
 									</MenuButton>
 									<MenuList bg={"blue.600"}>
+										<MenuItem bg={"blue.600"} color={"white"}>
+											Editar usuário
+										</MenuItem>
+										<DeleteUser />
 										<MenuItem bg={"blue.600"} color={"white"} onClick={() => logout()}>
 											Sair
 										</MenuItem>
