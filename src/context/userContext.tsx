@@ -2,7 +2,6 @@
 import api from "@/services/api";
 import { useState, useEffect, createContext, useContext } from "react";
 import { iUser, iUserCreate, iUserData, iUserProps, iUserUpdate } from "@/types/user.interface";
-import { iContactCard } from "@/types/contact.interface";
 import { destroyCookie } from "nookies";
 import { getBearer, getAuthData } from "../utils/authUtils";
 import CustomToast from "@/styles/toast";

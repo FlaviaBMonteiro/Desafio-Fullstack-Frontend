@@ -13,6 +13,7 @@ import {
 import { useUserContext } from "@/context/userContext";
 import React from "react";
 import DeleteConfirmationModal from "../modal/modalDeleteConfirmation";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 const DeleteUser = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -25,8 +26,8 @@ const DeleteUser = () => {
 
 	return (
 		<>
-			<MenuItem bg={"blue.600"} color={"white"} onClick={onOpen}>
-				Deletar Usuário
+			<MenuItem bg={"blue.600"} color={"white"} onClick={onOpen} icon={<DeleteIcon />}>
+				Excluir Usuário
 			</MenuItem>
 			<DeleteConfirmationModal isOpen={isOpen} onClose={onClose} onDelete={onDelete} />
 		</>

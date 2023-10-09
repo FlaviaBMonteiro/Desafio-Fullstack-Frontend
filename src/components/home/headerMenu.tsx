@@ -16,7 +16,8 @@ import {
 import ModalLoginUser from "@/components/modal/modalLoginUser";
 import { useAuthContext } from "@/context/authContext";
 import { useUserContext } from "@/context/userContext";
-import DeleteUser from "../dashboard/DeleteUser";
+import DeleteUser from "../dashboard/deleteUser";
+import { EditIcon, SmallCloseIcon } from "@chakra-ui/icons";
 
 const HeaderMenu = () => {
 	const { logout } = useAuthContext();
@@ -31,7 +32,7 @@ const HeaderMenu = () => {
 				<Spacer />
 				<Box mr="10">
 					<Flex alignItems={"center"}>
-						{user?.name ? (
+						{user ? (
 							<>
 								<Text color={"white"} paddingRight={2}>
 									{user.name}
@@ -47,11 +48,16 @@ const HeaderMenu = () => {
 										<Avatar size={"sm"} src={user.imgURL} />
 									</MenuButton>
 									<MenuList bg={"blue.600"}>
-										<MenuItem bg={"blue.600"} color={"white"}>
+										<MenuItem bg={"blue.600"} color={"white"} icon={<EditIcon />}>
 											Editar usuário
 										</MenuItem>
 										<DeleteUser />
-										<MenuItem bg={"blue.600"} color={"white"} onClick={() => logout()}>
+										<MenuItem
+											bg={"blue.600"}
+											color={"white"}
+											icon={<SmallCloseIcon />}
+											onClick={() => logout()}
+										>
 											Sair
 										</MenuItem>
 									</MenuList>

@@ -30,7 +30,7 @@ export interface iContactCreate {
 	isFavorite?: boolean;
 }
 export interface iContactUpdate {
-	id: number;
+	id?: number;
 	email?: string;
 	name?: string;
 	phone?: string;
@@ -43,5 +43,6 @@ export interface iContactData {
 	setContacts: Dispatch<SetStateAction<iContact[]>>;
 	getContacts: () => Promise<void>;
 	createContact: (data: iContactCreate) => Promise<void>;
+	updateContact: (data: iContactUpdate, contactId: number) => Promise<void>;
 	deleteContact: (id: number) => Promise<void>;
 }

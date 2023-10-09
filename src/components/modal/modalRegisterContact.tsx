@@ -20,6 +20,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { iContactCreate } from "@/types/contact.interface";
 import { useContactContext } from "@/context/contactContext";
+import { SmallAddIcon } from "@chakra-ui/icons";
 
 // Importe o contexto de contato
 
@@ -71,7 +72,7 @@ const ModalRegisterContact = () => {
 
 	return (
 		<>
-			<Button variant="default" onClick={onOpen} mt="5vh">
+			<Button variant="default" leftIcon={<SmallAddIcon />} onClick={onOpen} mt="5vh">
 				Novo Contato
 			</Button>
 

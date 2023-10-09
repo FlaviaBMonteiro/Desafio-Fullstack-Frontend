@@ -22,9 +22,6 @@ const ContactCard = ({ id, email, name, phone, imgURL, isFavorite }: iContactCar
 
 	const changePhone = () => {
 		setviewContact(phone);
-		{
-			console.log(isFavorite, phone);
-		}
 	};
 	const changeEmail = () => {
 		setviewContact(email);
@@ -44,7 +41,7 @@ const ContactCard = ({ id, email, name, phone, imgURL, isFavorite }: iContactCar
 					/>
 					<Spacer />
 					<Menu>
-						<EditContactMenu id={id} email={email} phone={phone} />
+						<EditContactMenu id={id} isFavorite={isFavorite} email={email} phone={phone} />
 					</Menu>
 				</Flex>
 			</CardHeader>
