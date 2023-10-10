@@ -1,5 +1,5 @@
 import { Dispatch, ReactNode, SetStateAction } from "react";
-import { iContact, iContactCard } from "./contact.interface";
+import { iContact } from "./contact.interface";
 
 export interface iUser {
 	id: number;
@@ -57,6 +57,6 @@ export interface iUserData {
 	setUser: Dispatch<SetStateAction<iUser | null>>;
 	getUser: () => Promise<void>;
 	createUser: (data: iUserCreate) => Promise<void>;
-	updateUser: (data: iUserUpdate, userId: string) => Promise<void>;
+	updateUser: (data: iUserUpdate) => Promise<void>;
 	deleteUser: () => Promise<void>;
 }
