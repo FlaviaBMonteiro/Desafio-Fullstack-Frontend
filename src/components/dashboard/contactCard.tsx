@@ -41,7 +41,14 @@ const ContactCard = ({ id, email, name, phone, imgURL, isFavorite }: iContactCar
 					/>
 					<Spacer />
 					<Menu>
-						<EditContactMenu id={id} isFavorite={isFavorite} email={email} phone={phone} />
+						<EditContactMenu
+							id={id}
+							name={name}
+							phone={phone}
+							email={email}
+							imgURL={imgURL}
+							isFavorite={isFavorite}
+						/>
 					</Menu>
 				</Flex>
 			</CardHeader>

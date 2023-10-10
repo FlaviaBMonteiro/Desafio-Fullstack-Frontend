@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import {
 	Button,
 	FormControl,
@@ -11,37 +11,38 @@ import {
 	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
-	useDisclosure,
 	Spacer,
 	Checkbox,
+	useDisclosure,
+	MenuItem,
 } from "@chakra-ui/react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { iContactCreate } from "@/types/contact.interface";
+import { iContactUpdate } from "@/types/contact.interface";
 import { useContactContext } from "@/context/contactContext";
-import { SmallAddIcon } from "@chakra-ui/icons";
+import { EditIcon, SmallAddIcon } from "@chakra-ui/icons";
+import CustomToast from "@/styles/toast";
 
-const ModalRegisterContact = () => {
+interface Props {
+	id: number;
+	contactData: iContactUpdate;
+}
+
+const ModalEditContact = ({ contactData, id }: Props) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { createContact } = useContactContext();
+	const { updateContact } = useContactContext();
+	const customToast = CustomToast();
 
 	const formSchema = yup.object().shape({
-		email: yup
-			.string()
-			.email("Por favor, digite um email válido")
-			.required("Por favor, digite um email válido"),
-		name: yup
-			.string()
-			.required("Por favor, digite um nome válido")
-			.min(6, "O nome deve conter pelo menos 6 caracteres"),
+		id: yup.number(),
+		email: yup.string().email("Por favor, digite um email válido"),
+		name: yup.string().min(6, "O nome deve conter pelo menos 6 caracteres"),
 		phone: yup
 			.string()
-			.required("Por favor, digite um telefone válido")
 			.matches(/^[0-9]{10,11}$/, "O telefone deve conter 10 ou 11 dígitos numéricos"),
 		imgURL: yup
 			.string()
-			.required("Por favor, digite a URL da imagem")
 			.url("a URL digitada não é uma imagem válida")
 			.matches(/\.(jpeg|jpg|gif|png)$/i, "a URL da imagem deve terminar em jpeg, jpg, gif ou png")
 			.max(300, "A URL deve conter menos de 300 caracteres"),
@@ -53,31 +54,38 @@ const ModalRegisterContact = () => {
 		handleSubmit,
 		formState: { errors },
 		reset,
-	} = useForm<iContactCreate>({
+	} = useForm<iContactUpdate>({
 		resolver: yupResolver(formSchema),
 		mode: "onChange",
+		defaultValues: contactData, // Preencha o formulário com os dados do contato
 	});
 
-	const onFormSubmit = async (formData: iContactCreate) => {
+	useEffect(() => {
+		reset(contactData); // Reseta o formulário com os novos dados quando o modal é aberto
+	}, [contactData, reset]);
+
+	const onFormSubmit = async (formData: iContactUpdate) => {
 		try {
-			await createContact(formData);
-			reset();
+			if (formData.email === contactData.email) {
+				delete formData.email;
+			}
+			await updateContact(formData, id);
 			onClose();
 		} catch (error) {
-			console.log("Erro", error);
+			customToast.showToast("Erro", "error", `${error}`);
 		}
 	};
 
 	return (
 		<>
-			<Button variant="default" leftIcon={<SmallAddIcon />} onClick={onOpen} mt="5vh">
-				Novo Contato
-			</Button>
+			<MenuItem onClick={onOpen} icon={<EditIcon />}>
+				Editar Contato
+			</MenuItem>
 
 			<Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
 				<ModalContent>
-					<ModalHeader textAlign="center">Adicionar Contato</ModalHeader>
+					<ModalHeader textAlign="center">Editar Contato</ModalHeader>
 					<ModalBody pb={6}>
 						<FormControl id="email" isRequired isInvalid={!!errors.email}>
 							<FormLabel>E-mail</FormLabel>
@@ -140,7 +148,11 @@ const ModalRegisterContact = () => {
 							</FormErrorMessage>
 						</FormControl>
 						<FormControl id="isFavorite" isInvalid={!!errors.isFavorite}>
-							<Checkbox colorScheme="blue" {...register("isFavorite")}>
+							<Checkbox
+								colorScheme="blue"
+								{...register("isFavorite")}
+								defaultChecked={contactData.isFavorite}
+							>
 								Marcar como favorito
 							</Checkbox>
 						</FormControl>
@@ -158,7 +170,7 @@ const ModalRegisterContact = () => {
 								bg: "blue.700",
 							}}
 						>
-							Adicionar
+							Salvar
 						</Button>
 					</ModalFooter>
 				</ModalContent>
@@ -167,4 +179,4 @@ const ModalRegisterContact = () => {
 	);
 };
 
-export default ModalRegisterContact;
+export default ModalEditContact;

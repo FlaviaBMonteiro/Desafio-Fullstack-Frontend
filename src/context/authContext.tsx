@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }: iAuthtProps) => {
 		await api
 			.post("login", userData)
 			.then(async (response) => {
-				customToast.showToast("Login", "success", "Você será redirecionado para o site.");
+				customToast.showToast("Login", "success", "Seja bem vindo");
 
 				// Criar um objeto JSON com o token e o e-mail
 				const authData = {

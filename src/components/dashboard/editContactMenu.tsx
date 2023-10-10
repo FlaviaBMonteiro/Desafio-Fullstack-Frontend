@@ -5,15 +5,11 @@ import { useContactContext } from "@/context/contactContext";
 import DeleteConfirmationModal from "../modal/modalDeleteConfirmation";
 import CustomToast from "@/styles/toast";
 import FavoriteButton from "./favoriteButton";
+import ModalEditContact from "../modal/modalEditContact";
+import { iContactCard } from "@/types/contact.interface";
 
-interface Props {
-	phone: string;
-	email: string;
-	id: number;
-	isFavorite: boolean;
-}
-
-const EditContactMenu = ({ id, isFavorite, email, phone }: Props) => {
+const EditContactMenu = ({ id, email, name, phone, imgURL, isFavorite }: iContactCard) => {
+	const data = { id, email, name, phone, imgURL, isFavorite };
 	const { updateContact, deleteContact } = useContactContext(); // Obtenha a função deleteContact do contexto
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const customToast = CustomToast();
@@ -47,38 +43,25 @@ const EditContactMenu = ({ id, isFavorite, email, phone }: Props) => {
 	};
 
 	return (
-		<>
-			<Menu>
-				<MenuButton
-					as={IconButton}
-					aria-label="Options"
-					icon={<HamburgerIcon />}
-					variant="outline"
-				/>
-				<MenuList>
-					<MenuItem onClick={() => alert("Kagebunshin")} icon={<EditIcon />}>
-						Editar Contato
-					</MenuItem>
-					<MenuItem onClick={() => copyText(email)} icon={<CopyIcon />}>
-						Copiar Email
-					</MenuItem>
-					<MenuItem onClick={() => copyText(phone)} icon={<CopyIcon />}>
-						Copiar Telefone
-					</MenuItem>
+		<Menu>
+			<MenuButton as={IconButton} aria-label="Options" icon={<HamburgerIcon />} variant="outline" />
+			<MenuList>
+				<ModalEditContact onClick={onOpen} contactData={data} id={id} />
+				<MenuItem onClick={() => copyText(email)} icon={<CopyIcon />}>
+					Copiar Email
+				</MenuItem>
+				<MenuItem onClick={() => copyText(phone)} icon={<CopyIcon />}>
+					Copiar Telefone
+				</MenuItem>
 
-					<FavoriteButton isFavorite={isFavorite} onClick={toggleFavorite} />
+				<FavoriteButton isFavorite={isFavorite} onClick={toggleFavorite} />
 
-					<MenuItem onClick={onOpen} icon={<DeleteIcon />}>
-						Excluir Contato
-					</MenuItem>
-					<DeleteConfirmationModal
-						isOpen={isOpen}
-						onClose={onClose}
-						onDelete={() => onDelete(id)}
-					/>
-				</MenuList>
-			</Menu>
-		</>
+				<MenuItem onClick={onOpen} icon={<DeleteIcon />}>
+					Excluir Contato
+				</MenuItem>
+				<DeleteConfirmationModal isOpen={isOpen} onClose={onClose} onDelete={() => onDelete(id)} />
+			</MenuList>
+		</Menu>
 	);
 };
 
