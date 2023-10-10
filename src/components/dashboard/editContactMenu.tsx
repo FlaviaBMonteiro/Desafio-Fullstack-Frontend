@@ -46,7 +46,7 @@ const EditContactMenu = ({ id, email, name, phone, imgURL, isFavorite }: iContac
 		<Menu>
 			<MenuButton as={IconButton} aria-label="Options" icon={<HamburgerIcon />} variant="outline" />
 			<MenuList>
-				<ModalEditContact onClick={onOpen} contactData={data} id={id} />
+				<ModalEditContact contactData={data} id={id} />
 				<MenuItem onClick={() => copyText(email)} icon={<CopyIcon />}>
 					Copiar Email
 				</MenuItem>
