@@ -72,10 +72,9 @@ export const UserProvider = ({ children }: iUserProps) => {
 
 		if (authData && config) {
 			await api
-				.patch<iUser>(`/users/${user?.id}`, data, config)
+				.patch(`/users/${user?.id}`, data, config)
 				.then(({ data }) => {
 					setUser(data);
-					customToast.showToast("", "success", "Dados atualizados");
 				})
 				.catch((err) => {
 					handleError(err);

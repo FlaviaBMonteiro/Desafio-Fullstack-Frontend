@@ -53,20 +53,16 @@ export const ContactProvider = ({ children }: iUserProps) => {
 		if (contacts && config) {
 			try {
 				await api.patch<iContact>(`/contacts/${contactId}`, data, config);
-
 				// Crie uma cópia dos contatos existentes
 				const updatedContacts = [...contacts];
-
 				// Encontre o índice do contato que está sendo atualizado
 				const contactIndex = updatedContacts.findIndex((contact) => contact.id === contactId);
-
 				if (contactIndex !== -1) {
 					// Atualize os dados do contato na cópia
 					updatedContacts[contactIndex] = {
 						...updatedContacts[contactIndex],
 						...data, // Aplicar as alterações do novo dado
 					};
-
 					// Atualize o estado com a nova cópia dos contatos
 					setContacts(updatedContacts);
 					customToast.showToast("Contato", "success", "Dados atualizados");

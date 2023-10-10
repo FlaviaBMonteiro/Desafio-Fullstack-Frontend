@@ -19,16 +19,13 @@ export const AuthProvider = ({ children }: iAuthtProps) => {
 			.post("login", userData)
 			.then(async (response) => {
 				customToast.showToast("Login", "success", "Seja bem vindo");
-
 				// Criar um objeto JSON com o token e o e-mail
 				const authData = {
 					token: response.data.token,
 					email: response.data.email,
 				};
-
 				// Converter o objeto JSON em uma string
 				const authDataString = JSON.stringify(authData);
-
 				// Armazenar a string no cookie
 				setCookie(null, "KenzieToken", authDataString, {
 					maxAge: 60 * 60 * 7,

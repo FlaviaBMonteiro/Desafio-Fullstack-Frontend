@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import {
 	Button,
 	FormControl,
@@ -11,42 +10,37 @@ import {
 	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
-	Spacer,
-	Checkbox,
 	useDisclosure,
+	Spacer,
 	MenuItem,
+	Checkbox,
 } from "@chakra-ui/react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { iContactUpdate } from "@/types/contact.interface";
-import { useContactContext } from "@/context/contactContext";
 import { EditIcon } from "@chakra-ui/icons";
+import { iUserUpdate } from "@/types/user.interface";
+import { useUserContext } from "@/context/userContext";
+import { useEffect, useState } from "react";
 import CustomToast from "@/styles/toast";
 
-interface Props {
-	id: number;
-	contactData: iContactUpdate;
-}
-
-const ModalEditContact = ({ contactData, id }: Props) => {
+const ModalEditUser = ({ user }: { user: iUserUpdate }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { updateContact } = useContactContext();
+	const { updateUser } = useUserContext();
 	const customToast = CustomToast();
+	const [useImage, setUseImage] = useState(false);
 
 	const formSchema = yup.object().shape({
-		id: yup.number(),
 		email: yup.string().email("Por favor, digite um email válido"),
-		name: yup.string().min(6, "O nome deve conter pelo menos 6 caracteres"),
+		name: yup.string().min(3, "O nome deve conter pelo menos 3 caracteres"),
 		phone: yup
 			.string()
 			.matches(/^[0-9]{10,11}$/, "O telefone deve conter 10 ou 11 dígitos numéricos"),
 		imgURL: yup
 			.string()
-			.url("a URL digitada não é uma imagem válida")
+			.url("a URL digitada não é uma imagem valida")
 			.matches(/\.(jpeg|jpg|gif|png)$/i, "a URL da imagem deve terminar em jpeg, jpg, gif ou png")
 			.max(300, "A URL deve conter menos de 300 caracteres"),
-		isFavorite: yup.boolean(),
 	});
 
 	const {
@@ -54,22 +48,31 @@ const ModalEditContact = ({ contactData, id }: Props) => {
 		handleSubmit,
 		formState: { errors },
 		reset,
-	} = useForm<iContactUpdate>({
+	} = useForm<iUserUpdate>({
 		resolver: yupResolver(formSchema),
 		mode: "onChange",
-		defaultValues: contactData,
+		defaultValues: user,
 	});
 
 	useEffect(() => {
-		reset(contactData);
-	}, [contactData, reset]);
+		if (isOpen) {
+			reset(user);
+		}
+	}, [isOpen, reset, user]);
 
-	const onFormSubmit = async (formData: iContactUpdate) => {
+	const onImageCheckboxChange = () => {
+		setUseImage(!useImage);
+		if (!useImage) {
+			reset({ ...user, imgURL: "" });
+		}
+	};
+
+	const onFormSubmit = async (formData: iUserUpdate) => {
 		try {
-			if (formData.email === (contactData.email || "")) {
+			if (formData.email === (user.email || "")) {
 				delete formData.email;
 			}
-			await updateContact(formData, id);
+			await updateUser(formData);
 			onClose();
 		} catch (error) {
 			customToast.showToast("Erro", "error", `${error}`);
@@ -78,14 +81,13 @@ const ModalEditContact = ({ contactData, id }: Props) => {
 
 	return (
 		<>
-			<MenuItem onClick={onOpen} icon={<EditIcon />}>
-				Editar Contato
+			<MenuItem bg={"blue.600"} color={"white"} onClick={onOpen} icon={<EditIcon />}>
+				Editar Usuário
 			</MenuItem>
-
 			<Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
 				<ModalContent>
-					<ModalHeader textAlign="center">Editar Contato</ModalHeader>
+					<ModalHeader textAlign="center">Editar Usuário</ModalHeader>
 					<ModalBody pb={6}>
 						<FormControl id="email" isRequired isInvalid={!!errors.email}>
 							<FormLabel>E-mail</FormLabel>
@@ -95,7 +97,7 @@ const ModalEditContact = ({ contactData, id }: Props) => {
 								errorBorderColor="red.300"
 								type="email"
 								{...register("email")}
-								placeholder="Digite o email do contato"
+								placeholder="Digite seu email"
 								margin="-15px 0px 20px 0px"
 							/>
 							<FormErrorMessage margin="-20px 0px 0px 0px" fontSize="small">
@@ -110,7 +112,7 @@ const ModalEditContact = ({ contactData, id }: Props) => {
 								errorBorderColor="red.300"
 								type="text"
 								{...register("name")}
-								placeholder="Digite o nome do contato"
+								placeholder="Digite seu nome"
 								margin="-15px 0px 20px 0px"
 							/>
 							<FormErrorMessage margin="-20px 0px 0px 0px" fontSize="small">
@@ -125,14 +127,14 @@ const ModalEditContact = ({ contactData, id }: Props) => {
 								errorBorderColor="red.300"
 								type="tel"
 								{...register("phone")}
-								placeholder="Digite o telefone do contato"
+								placeholder="Digite seu telefone"
 								margin="-15px 0px 20px 0px"
 							/>
 							<FormErrorMessage margin="-20px 0px 0px 0px" fontSize="small">
 								{errors.phone?.message}
 							</FormErrorMessage>
 						</FormControl>
-						<FormControl id="imgURL" isRequired isInvalid={!!errors.imgURL}>
+						<FormControl id="imgURL" isDisabled={useImage} isInvalid={!!errors.imgURL}>
 							<FormLabel>Link da Imagem</FormLabel>
 							<Input
 								required
@@ -147,13 +149,9 @@ const ModalEditContact = ({ contactData, id }: Props) => {
 								{errors.imgURL?.message}
 							</FormErrorMessage>
 						</FormControl>
-						<FormControl id="isFavorite" isInvalid={!!errors.isFavorite}>
-							<Checkbox
-								colorScheme="blue"
-								{...register("isFavorite")}
-								defaultChecked={contactData.isFavorite}
-							>
-								Marcar como favorito
+						<FormControl display="flex" alignItems="center">
+							<Checkbox isChecked={useImage} onChange={onImageCheckboxChange} size="lg">
+								Não Usar Imagem
 							</Checkbox>
 						</FormControl>
 					</ModalBody>
@@ -179,4 +177,4 @@ const ModalEditContact = ({ contactData, id }: Props) => {
 	);
 };
 
-export default ModalEditContact;
+export default ModalEditUser;
