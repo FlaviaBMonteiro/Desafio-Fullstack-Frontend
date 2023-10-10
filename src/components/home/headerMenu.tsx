@@ -12,27 +12,27 @@ import {
 	Text,
 	Spacer,
 } from "@chakra-ui/react";
-import { parseCookies } from "nookies";
+
 import ModalLoginUser from "@/components/modal/modalLoginUser";
-import { useRouter } from "next/router";
 import { useAuthContext } from "@/context/authContext";
 import { useUserContext } from "@/context/userContext";
+import DeleteUser from "../dashboard/deleteUser";
+import { EditIcon, SmallCloseIcon } from "@chakra-ui/icons";
 
 const HeaderMenu = () => {
-	const router = useRouter();
-	const cookies = parseCookies();
 	const { logout } = useAuthContext();
 	const { user } = useUserContext();
+
 	return (
 		<>
-			<Flex boxShadow="md" pr="6" pl="6" pt="2" pb="2" bg="blue.600" alignItems="center">
+			<Flex boxShadow="md" pr="6" pl="6" pt="2" pb="2" bg="blue.600" alignItems="center" h="10vh">
 				<Box ml="10">
 					<Image src={logo} alt="logo" />
 				</Box>
 				<Spacer />
 				<Box mr="10">
 					<Flex alignItems={"center"}>
-						{user?.name === "Flavia" ? (
+						{user ? (
 							<>
 								<Text color={"white"} paddingRight={2}>
 									{user.name}
@@ -48,7 +48,16 @@ const HeaderMenu = () => {
 										<Avatar size={"sm"} src={user.imgURL} />
 									</MenuButton>
 									<MenuList bg={"blue.600"}>
-										<MenuItem bg={"blue.600"} color={"white"} onClick={() => logout()}>
+										<MenuItem bg={"blue.600"} color={"white"} icon={<EditIcon />}>
+											Editar usuário
+										</MenuItem>
+										<DeleteUser />
+										<MenuItem
+											bg={"blue.600"}
+											color={"white"}
+											icon={<SmallCloseIcon />}
+											onClick={() => logout()}
+										>
 											Sair
 										</MenuItem>
 									</MenuList>

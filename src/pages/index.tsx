@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { iHeaderProps } from "@/types/user.interface";
 import Main from "./home";
 
 export default function Home() {

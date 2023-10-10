@@ -1,34 +1,24 @@
 import api from "@/services/api";
-import { iUserEmail, iUserLogin } from "@/types//user.interface";
-import { iAuthContext, iAuthtProps, iToken } from "@/types/auth.interface";
-import { Box, useToast } from "@chakra-ui/react";
+import { iUserLogin } from "@/types//user.interface";
+import { iAuthContext, iAuthData, iAuthtProps, iToken } from "@/types/auth.interface";
 import { useRouter } from "next/router";
-import { destroyCookie, setCookie } from "nookies";
+import { destroyCookie, parseCookies, setCookie } from "nookies";
 import { createContext, useContext, useState } from "react";
 import { useUserContext } from "./userContext";
+import CustomToast from "@/styles/toast";
 
 export const AuthContext = createContext<iAuthContext>({} as iAuthContext);
 
 export const AuthProvider = ({ children }: iAuthtProps) => {
 	const router = useRouter();
-
-	const { setUser, getUser } = useUserContext();
-	const toast = useToast({
-		position: "top",
-		duration: 3000,
-		isClosable: true,
-		variant: "left-accent",
-	});
+	const { user, setUser, getUser } = useUserContext();
+	const customToast = CustomToast();
 
 	const login = async (userData: iUserLogin) => {
 		await api
 			.post("login", userData)
 			.then(async (response) => {
-				toast({
-					title: "Login realizado.",
-					status: "success",
-					description: "Logo você será redirecionado para o site.",
-				});
+				customToast.showToast("Login", "success", "Seja bem vindo");
 
 				// Criar um objeto JSON com o token e o e-mail
 				const authData = {
@@ -47,13 +37,11 @@ export const AuthProvider = ({ children }: iAuthtProps) => {
 
 				getUser();
 				router.push("/home");
+				return user;
 			})
 			.catch((err) => {
-				toast({
-					title: "Erro ao fazer login",
-					status: "error",
-					description: "email ou senha inválidos",
-				});
+				const errorMessage = err.response.status + " " + err.response.statusText;
+				customToast.showToast(errorMessage, "error", err.response.data.message);
 			});
 	};
 	const logout = () => {
@@ -61,6 +49,7 @@ export const AuthProvider = ({ children }: iAuthtProps) => {
 		setUser(null);
 		router.push("/");
 	};
+
 	return <AuthContext.Provider value={{ login, logout }}>{children}</AuthContext.Provider>;
 };
 

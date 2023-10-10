@@ -13,14 +13,13 @@ import {
 	Heading,
 	Text,
 	Menu,
-	MenuButton,
-	MenuList,
 } from "@chakra-ui/react";
-import { StarIcon, HamburgerIcon, PhoneIcon, EmailIcon } from "@chakra-ui/icons";
+import { StarIcon, PhoneIcon, EmailIcon } from "@chakra-ui/icons";
 import { useState } from "react";
 
 const ContactCard = ({ id, email, name, phone, imgURL, isFavorite }: iContactCard) => {
 	const [viewContact, setviewContact] = useState(phone);
+
 	const changePhone = () => {
 		setviewContact(phone);
 	};
@@ -28,19 +27,28 @@ const ContactCard = ({ id, email, name, phone, imgURL, isFavorite }: iContactCar
 		setviewContact(email);
 	};
 	return (
-		<Card>
+		<Card h="400px" gap="1">
 			<CardHeader>
 				<Flex>
 					<IconButton
 						colorScheme="blue"
 						aria-label="Favorito"
 						variant="outline"
+						bgColor="white"
+						color={isFavorite ? "blue.400" : "blue.50"}
 						border="0px"
 						icon={<StarIcon />}
 					/>
 					<Spacer />
 					<Menu>
-						<EditContactMenu email={email} phone={phone} />
+						<EditContactMenu
+							id={id}
+							name={name}
+							phone={phone}
+							email={email}
+							imgURL={imgURL}
+							isFavorite={isFavorite}
+						/>
 					</Menu>
 				</Flex>
 			</CardHeader>

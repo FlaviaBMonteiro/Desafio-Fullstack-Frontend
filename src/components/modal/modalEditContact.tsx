@@ -1,55 +1,52 @@
+import React, { useEffect } from "react";
 import {
 	Button,
 	FormControl,
 	FormErrorMessage,
 	FormLabel,
 	Input,
-	InputGroup,
-	InputRightElement,
 	Modal,
 	ModalBody,
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
-	useDisclosure,
 	Spacer,
+	Checkbox,
+	useDisclosure,
+	MenuItem,
 } from "@chakra-ui/react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
-import { iUserCreate } from "@/types/user.interface";
-import { useUserContext } from "@/context/userContext";
-import { useState } from "react";
+import { iContactUpdate } from "@/types/contact.interface";
+import { useContactContext } from "@/context/contactContext";
+import { EditIcon, SmallAddIcon } from "@chakra-ui/icons";
+import CustomToast from "@/styles/toast";
 
-const ModalRegisterUser = () => {
+interface Props {
+	id: number;
+	contactData: iContactUpdate;
+}
+
+const ModalEditContact = ({ contactData, id }: Props) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { createUser } = useUserContext();
-	const [showPassword, setShowPassword] = useState(false);
+	const { updateContact } = useContactContext();
+	const customToast = CustomToast();
 
 	const formSchema = yup.object().shape({
-		email: yup
-			.string()
-			.email("Por favor, digite um email válido")
-			.required("Por favor, digite um email válido"),
-		password: yup.string().required("Por favor, digite uma senha válida"),
-		name: yup
-			.string()
-			.required("Por favor, digite um nome válido")
-			.min(3, "O nome deve conter pelo menos 3 caracteres"),
-
+		id: yup.number(),
+		email: yup.string().email("Por favor, digite um email válido"),
+		name: yup.string().min(6, "O nome deve conter pelo menos 6 caracteres"),
 		phone: yup
 			.string()
-			.required("Por favor, digite um telefone válido")
 			.matches(/^[0-9]{10,11}$/, "O telefone deve conter 10 ou 11 dígitos numéricos"),
-
 		imgURL: yup
 			.string()
-			.required("Por favor, digite a URL da imagem")
-			.url("a URL digitada não é uma imagem valida")
+			.url("a URL digitada não é uma imagem válida")
 			.matches(/\.(jpeg|jpg|gif|png)$/i, "a URL da imagem deve terminar em jpeg, jpg, gif ou png")
 			.max(300, "A URL deve conter menos de 300 caracteres"),
+		isFavorite: yup.boolean(),
 	});
 
 	const {
@@ -57,31 +54,38 @@ const ModalRegisterUser = () => {
 		handleSubmit,
 		formState: { errors },
 		reset,
-	} = useForm<iUserCreate>({
+	} = useForm<iContactUpdate>({
 		resolver: yupResolver(formSchema),
-		mode: "onChange", // Ative o modo onChange para validação em tempo real
+		mode: "onChange",
+		defaultValues: contactData, // Preencha o formulário com os dados do contato
 	});
 
-	const onFormSubmit = async (formData: iUserCreate) => {
+	useEffect(() => {
+		reset(contactData); // Reseta o formulário com os novos dados quando o modal é aberto
+	}, [contactData, reset]);
+
+	const onFormSubmit = async (formData: iContactUpdate) => {
 		try {
-			await createUser(formData);
-			reset();
+			if (formData.email === contactData.email) {
+				delete formData.email;
+			}
+			await updateContact(formData, id);
 			onClose();
 		} catch (error) {
-			// Lida com erros de registro, se necessário
+			customToast.showToast("Erro", "error", `${error}`);
 		}
 	};
 
 	return (
 		<>
-			<Button variant="default" onClick={onOpen}>
-				Registre-se
-			</Button>
+			<MenuItem onClick={onOpen} icon={<EditIcon />}>
+				Editar Contato
+			</MenuItem>
 
 			<Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
 				<ModalContent>
-					<ModalHeader textAlign="center">R e g i s t r o</ModalHeader>
+					<ModalHeader textAlign="center">Editar Contato</ModalHeader>
 					<ModalBody pb={6}>
 						<FormControl id="email" isRequired isInvalid={!!errors.email}>
 							<FormLabel>E-mail</FormLabel>
@@ -91,37 +95,11 @@ const ModalRegisterUser = () => {
 								errorBorderColor="red.300"
 								type="email"
 								{...register("email")}
-								placeholder="Digite seu email"
+								placeholder="Digite o email do contato"
 								margin="-15px 0px 20px 0px"
 							/>
 							<FormErrorMessage margin="-20px 0px 0px 0px" fontSize="small">
 								{errors.email?.message}
-							</FormErrorMessage>
-						</FormControl>
-						<FormControl id="password" isRequired isInvalid={!!errors.password}>
-							<FormLabel>Senha</FormLabel>
-							<InputGroup>
-								<Input
-									required
-									focusBorderColor="blue.300"
-									errorBorderColor="red.300"
-									type={showPassword ? "text" : "password"}
-									{...register("password")}
-									placeholder="Crie uma senha"
-									margin="-8px 0px 20px 0px"
-								/>
-								<InputRightElement h={"full"}>
-									<Button
-										margin="-8px 0px 20px 0px"
-										variant={"ghost"}
-										onClick={() => setShowPassword((showPassword) => !showPassword)}
-									>
-										{showPassword ? <ViewIcon /> : <ViewOffIcon />}
-									</Button>
-								</InputRightElement>
-							</InputGroup>
-							<FormErrorMessage margin="-20px 0px 0px 0px" fontSize="small">
-								{errors.password?.message}
 							</FormErrorMessage>
 						</FormControl>
 						<FormControl id="name" isRequired isInvalid={!!errors.name}>
@@ -132,7 +110,7 @@ const ModalRegisterUser = () => {
 								errorBorderColor="red.300"
 								type="text"
 								{...register("name")}
-								placeholder="Digite seu nome"
+								placeholder="Digite o nome do contato"
 								margin="-15px 0px 20px 0px"
 							/>
 							<FormErrorMessage margin="-20px 0px 0px 0px" fontSize="small">
@@ -147,7 +125,7 @@ const ModalRegisterUser = () => {
 								errorBorderColor="red.300"
 								type="tel"
 								{...register("phone")}
-								placeholder="Digite seu telefone"
+								placeholder="Digite o telefone do contato"
 								margin="-15px 0px 20px 0px"
 							/>
 							<FormErrorMessage margin="-20px 0px 0px 0px" fontSize="small">
@@ -169,6 +147,15 @@ const ModalRegisterUser = () => {
 								{errors.imgURL?.message}
 							</FormErrorMessage>
 						</FormControl>
+						<FormControl id="isFavorite" isInvalid={!!errors.isFavorite}>
+							<Checkbox
+								colorScheme="blue"
+								{...register("isFavorite")}
+								defaultChecked={contactData.isFavorite}
+							>
+								Marcar como favorito
+							</Checkbox>
+						</FormControl>
 					</ModalBody>
 					<ModalFooter>
 						<Button size="lg" onClick={onClose}>
@@ -183,7 +170,7 @@ const ModalRegisterUser = () => {
 								bg: "blue.700",
 							}}
 						>
-							Registrar
+							Salvar
 						</Button>
 					</ModalFooter>
 				</ModalContent>
@@ -192,4 +179,4 @@ const ModalRegisterUser = () => {
 	);
 };
 
-export default ModalRegisterUser;
+export default ModalEditContact;

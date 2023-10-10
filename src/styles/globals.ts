@@ -50,7 +50,7 @@ const globalTheme = {
 		black: 900,
 	},
 
-	radii: {
+	radio: {
 		none: "0",
 		sm: "0.125rem",
 		base: "0.25rem",
@@ -117,6 +117,12 @@ const globalTheme = {
 					},
 				},
 			},
+		},
+		toast: {
+			position: "top",
+			duration: 3000,
+			isClosable: true,
+			variant: "left-accent",
 		},
 	},
 };
