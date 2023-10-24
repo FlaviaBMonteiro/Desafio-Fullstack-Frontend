@@ -10,7 +10,7 @@ import { iContactCard } from "@/types/contact.interface";
 
 const EditContactMenu = ({ id, email, name, phone, imgURL, isFavorite }: iContactCard) => {
 	const data = { id, email, name, phone, imgURL, isFavorite };
-	const { updateContact, deleteContact } = useContactContext(); // Obtenha a função deleteContact do contexto
+	const { updateContact, deleteContact } = useContactContext();
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const customToast = CustomToast();
 
@@ -26,27 +26,35 @@ const EditContactMenu = ({ id, email, name, phone, imgURL, isFavorite }: iContac
 	};
 	const onDelete = async (id: number) => {
 		deleteContact(id);
-		onClose(); // Certifique-se de chamar onClose para fechar o modal após a exclusão.
+		onClose();
 	};
 
 	const toggleFavorite = () => {
-		// Determine a ação com base no estado atual de isFavorite
 		const action = isFavorite ? "Remover dos Favoritos" : "Adicionar aos Favoritos";
 
-		// Crie um objeto com a propriedade isFavorite atualizada
 		const updatedData = {
 			isFavorite: !isFavorite,
 		};
 
-		// Chame a função de contexto para atualizar apenas a propriedade isFavorite
 		updateContact(updatedData, id);
 	};
 
 	return (
-		<Menu>
-			<MenuButton as={IconButton} aria-label="Options" icon={<HamburgerIcon />} variant="outline" />
+		<>
+			<MenuButton
+				as={IconButton}
+				aria-label="Options"
+				icon={<HamburgerIcon />}
+				background="transparent"
+				color="blue.50"
+				border="transparent"
+				_hover={{
+					background: "transparent",
+					color: "blue.500",
+				}}
+			/>
 			<MenuList>
-				<ModalEditContact onClick={onOpen} contactData={data} id={id} />
+				<ModalEditContact contactData={data} id={id} />
 				<MenuItem onClick={() => copyText(email)} icon={<CopyIcon />}>
 					Copiar Email
 				</MenuItem>
@@ -61,7 +69,7 @@ const EditContactMenu = ({ id, email, name, phone, imgURL, isFavorite }: iContac
 				</MenuItem>
 				<DeleteConfirmationModal isOpen={isOpen} onClose={onClose} onDelete={() => onDelete(id)} />
 			</MenuList>
-		</Menu>
+		</>
 	);
 };
 

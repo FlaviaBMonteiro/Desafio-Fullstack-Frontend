@@ -5,18 +5,18 @@ import { useEffect } from "react";
 import { useContactContext } from "@/context/contactContext";
 
 const Dashboard = () => {
-	const { contacts, setContacts, getContacts } = useContactContext();
+	const { contacts, getContacts } = useContactContext();
 
 	useEffect(() => {
 		getContacts();
 	}, []);
 
 	return (
-		<Box h="90vh" alignContent="center">
+		<Box minH={{ base: "100vh", md: "90vh" }} alignContent="center">
 			<Box mb="2rem">
 				<ModalRegisterContact />
 			</Box>
-			<Center gap="10" justifyContent="space-evenly">
+			<Center flexDirection={{ base: "column", md: "row" }} justifyContent="center" margin="auto">
 				{contacts.length > 0 ? (
 					contacts.map((contact, index) => (
 						<ContactCard

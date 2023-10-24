@@ -69,7 +69,6 @@ export const UserProvider = ({ children }: iUserProps) => {
 	const updateUser = async (data: iUserUpdate) => {
 		const authData = getAuthData();
 		const config = getBearer();
-
 		if (authData && config) {
 			await api
 				.patch(`/users/${user?.id}`, data, config)

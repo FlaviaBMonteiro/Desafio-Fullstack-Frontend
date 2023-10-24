@@ -42,7 +42,7 @@ const ModalLoginUser = () => {
 		formState: { errors },
 	} = useForm<iUserLogin>({
 		resolver: yupResolver(formSchema),
-		mode: "onChange", // Ative o modo onChange para validação em tempo real
+		mode: "onChange",
 	});
 
 	const onFormSubmit = (formData: iUserLogin) => {
