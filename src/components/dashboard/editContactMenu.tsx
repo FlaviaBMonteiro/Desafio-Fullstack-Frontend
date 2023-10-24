@@ -43,10 +43,22 @@ const EditContactMenu = ({ id, email, name, phone, imgURL, isFavorite }: iContac
 	};
 
 	return (
-		<Menu>
-			<MenuButton as={IconButton} aria-label="Options" icon={<HamburgerIcon />} variant="outline" />
+		<>
+			<MenuButton
+				as={IconButton}
+				aria-label="Options"
+				icon={<HamburgerIcon />}
+				background="transparent"
+				color="blue.50"
+				border="transparent"
+				_hover={{
+					// Define o estilo quando o mouse estiver sobre o botão
+					background: "transparent",
+					color: "blue.500", // Altera a cor do ícone para blue.500 quando o mouse estiver sobre ele
+				}}
+			/>
 			<MenuList>
-				<ModalEditContact onClick={onOpen} contactData={data} id={id} />
+				<ModalEditContact contactData={data} id={id} />
 				<MenuItem onClick={() => copyText(email)} icon={<CopyIcon />}>
 					Copiar Email
 				</MenuItem>
@@ -61,7 +73,7 @@ const EditContactMenu = ({ id, email, name, phone, imgURL, isFavorite }: iContac
 				</MenuItem>
 				<DeleteConfirmationModal isOpen={isOpen} onClose={onClose} onDelete={() => onDelete(id)} />
 			</MenuList>
-		</Menu>
+		</>
 	);
 };
 

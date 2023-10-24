@@ -28,11 +28,11 @@ const HeaderMenu = () => {
 	return (
 		<>
 			<Flex boxShadow="md" pr="6" pl="6" pt="2" pb="2" bg="blue.600" alignItems="center" h="10vh">
-				<Box ml="10">
+				<Box ml={{ base: "0", md: "10" }}>
 					<Image src={logo} alt="logo" />
 				</Box>
 				<Spacer />
-				<Box mr="10">
+				<Box mr={{ base: "0", md: "10" }}>
 					<Flex alignItems={"center"}>
 						{user ? (
 							<>
