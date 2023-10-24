@@ -10,7 +10,7 @@ import { iContactCard } from "@/types/contact.interface";
 
 const EditContactMenu = ({ id, email, name, phone, imgURL, isFavorite }: iContactCard) => {
 	const data = { id, email, name, phone, imgURL, isFavorite };
-	const { updateContact, deleteContact } = useContactContext(); // Obtenha a função deleteContact do contexto
+	const { updateContact, deleteContact } = useContactContext();
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const customToast = CustomToast();
 
@@ -26,19 +26,16 @@ const EditContactMenu = ({ id, email, name, phone, imgURL, isFavorite }: iContac
 	};
 	const onDelete = async (id: number) => {
 		deleteContact(id);
-		onClose(); // Certifique-se de chamar onClose para fechar o modal após a exclusão.
+		onClose();
 	};
 
 	const toggleFavorite = () => {
-		// Determine a ação com base no estado atual de isFavorite
 		const action = isFavorite ? "Remover dos Favoritos" : "Adicionar aos Favoritos";
 
-		// Crie um objeto com a propriedade isFavorite atualizada
 		const updatedData = {
 			isFavorite: !isFavorite,
 		};
 
-		// Chame a função de contexto para atualizar apenas a propriedade isFavorite
 		updateContact(updatedData, id);
 	};
 
@@ -52,9 +49,8 @@ const EditContactMenu = ({ id, email, name, phone, imgURL, isFavorite }: iContac
 				color="blue.50"
 				border="transparent"
 				_hover={{
-					// Define o estilo quando o mouse estiver sobre o botão
 					background: "transparent",
-					color: "blue.500", // Altera a cor do ícone para blue.500 quando o mouse estiver sobre ele
+					color: "blue.500",
 				}}
 			/>
 			<MenuList>

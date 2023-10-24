@@ -23,7 +23,7 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
 	const cancelRef = React.useRef<HTMLElement | null>(null);
 
 	const handleDelete = () => {
-		onDelete(); // Chama onDelete sem um id (caso não seja fornecido)
+		onDelete();
 		onClose();
 	};
 

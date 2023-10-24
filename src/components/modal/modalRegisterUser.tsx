@@ -22,11 +22,13 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { iUserCreate } from "@/types/user.interface";
 import { useUserContext } from "@/context/userContext";
 import { useState } from "react";
+import CustomToast from "@/styles/toast";
 
 const ModalRegisterUser = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { createUser } = useUserContext();
 	const [showPassword, setShowPassword] = useState(false);
+	const customToast = CustomToast();
 
 	const formSchema = yup.object().shape({
 		email: yup
@@ -68,7 +70,7 @@ const ModalRegisterUser = () => {
 			reset();
 			onClose();
 		} catch (error) {
-			// Lida com erros de registro, se necessário
+			customToast.showToast("Erro", "error", `${error}`);
 		}
 	};
 

@@ -1,17 +1,5 @@
 import React, { useState } from "react";
-import {
-	Box,
-	Image,
-	Flex,
-	Text,
-	IconButton,
-	HStack,
-	VStack,
-	Tooltip,
-	Stack,
-	Spacer,
-	Menu,
-} from "@chakra-ui/react";
+import { Box, Flex, Text, HStack, Tooltip, Spacer, Menu } from "@chakra-ui/react";
 import { HamburgerIcon, StarIcon, EmailIcon, PhoneIcon } from "@chakra-ui/icons";
 import EditContactMenu from "./editContactMenu";
 import { iContactCard } from "@/types/contact.interface";

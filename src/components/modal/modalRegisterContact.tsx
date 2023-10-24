@@ -21,10 +21,12 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { iContactCreate } from "@/types/contact.interface";
 import { useContactContext } from "@/context/contactContext";
 import { SmallAddIcon } from "@chakra-ui/icons";
+import CustomToast from "@/styles/toast";
 
 const ModalRegisterContact = () => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { createContact } = useContactContext();
+	const customToast = CustomToast();
 
 	const formSchema = yup.object().shape({
 		email: yup
@@ -64,7 +66,7 @@ const ModalRegisterContact = () => {
 			reset();
 			onClose();
 		} catch (error) {
-			console.log("Erro", error);
+			customToast.showToast("Erro", "error", `${error}`);
 		}
 	};
 

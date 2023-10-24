@@ -21,7 +21,7 @@ const DeleteUser = () => {
 
 	const onDelete = async () => {
 		await deleteUser();
-		onClose(); // Certifique-se de chamar onClose para fechar o modal após a exclusão.
+		onClose();
 	};
 
 	return (

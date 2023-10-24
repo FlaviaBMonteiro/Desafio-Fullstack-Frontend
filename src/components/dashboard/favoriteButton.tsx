@@ -9,7 +9,6 @@ interface FavoriteButtonProps {
 
 const FavoriteButton = ({ isFavorite, onClick }: FavoriteButtonProps) => {
 	const toggleFavorite = () => {
-		// Chame a função onClick passada como prop para alternar o estado
 		onClick();
 	};
 
